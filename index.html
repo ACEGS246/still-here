@@ -638,9 +638,9 @@
   function tickClocks() {
     var now = new Date();
     $('time-his').textContent = fmtTime('Australia/Sydney').format(now);
-    $('time-her').textContent = fmtTime('Europe/Warsaw').format(now);
+    $('time-her').textContent = fmtTime('America/Indiana/Indianapolis').format(now);
     var hs = hisState(hourIn('Australia/Sydney'));
-    var rs = herState(hourIn('Europe/Warsaw'));
+    var rs = herState(hourIn('America/Indiana/Indianapolis'));
     var se = $('state-his');
     se.textContent = hs.t; se.className = 'state ' + hs.c;
     var re = $('state-her');
@@ -657,7 +657,7 @@
       timeZone: 'Australia/Sydney', weekday: 'long', hour: 'numeric', minute: '2-digit', hour12: true
     }).format(d);
     var hers = new Intl.DateTimeFormat('en-AU', {
-      timeZone: 'Europe/Warsaw', weekday: 'long', hour: 'numeric', minute: '2-digit', hour12: true
+      timeZone: 'America/Indiana/Indianapolis', weekday: 'long', hour: 'numeric', minute: '2-digit', hour12: true
     }).format(d);
     $('window-desc').textContent = his + ' your time \u00B7 ' + hers + ' hers';
   }
@@ -866,7 +866,7 @@
     windBtn.innerHTML = on ? '&#9728;&#65038; wake the sky' : '&#127769; wind down';
   });
   function tickWindHint() {
-    var h = hourIn('Europe/Warsaw');
+    var h = hourIn('America/Indiana/Indianapolis');
     var late = (h >= 23 || h < 5);
     windBtn.classList.toggle('late', late);
     $('winddown-hint').textContent = late ? 'it\u2019s late for her \u2014 goodnight hours' : '';
