@@ -152,6 +152,8 @@
   }
   #heart-count { color: var(--muted); font-size: .95rem; text-align: center; font-style: italic; }
   #heart-count b { color: var(--amber); font-style: normal; }
+  #heart-total { color: var(--soft); font-size: .88rem; text-align: center; font-style: italic; margin-top: -8px; }
+  #heart-total b { color: var(--muted); font-style: normal; }
 
   /* ---- countdown ---- */
   #countdown-card {
@@ -291,6 +293,7 @@
       </svg>
     </button>
     <p id="heart-count"></p>
+    <p id="heart-total"></p>
   </section>
 
   <section id="question-card" class="card dim">
@@ -415,7 +418,7 @@
       var raw = localStorage.getItem(STORE_KEY);
       if (raw) return JSON.parse(raw);
     } catch (e) {}
-    return { hearts: 0, stars: [], target: DEFAULT_TARGET, answers: {}, gnText: '', gnAudio: null };
+    return { hearts: 0, stars: [], target: DEFAULT_TARGET, answers: {}, gnText: '', gnAudio: null, gnCycle: '' };
   }
   function save() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
@@ -425,6 +428,7 @@
   if (!state.stars) state.stars = [];
   if (typeof state.gnText !== 'string') state.gnText = '';
   if (!('gnAudio' in state)) state.gnAudio = null;
+  if (typeof state.gnCycle !== 'string') state.gnCycle = '';
   if (!state.target) state.target = DEFAULT_TARGET;
 
   function newCid() {
@@ -433,6 +437,56 @@
   state.stars.forEach(function (st) { if (!st.cid) st.cid = newCid(); });
   state.hearts = state.stars.length;
   save();
+
+  /* ---- goodnight reset: 8:00pm in Warsaw, Indiana ---- */
+  var HER_TZ = 'America/Indiana/Indianapolis';
+  function indianaParts(date) {
+    var parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: HER_TZ, year: 'numeric', month: '2-digit', day: '2-digit',
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
+    }).formatToParts(date || new Date());
+    var out = {};
+    parts.forEach(function (part) {
+      if (part.type !== 'literal') out[part.type] = parseInt(part.value, 10);
+    });
+    return out;
+  }
+  function goodnightCycleKey(date) {
+    var p = indianaParts(date);
+    var boundary = new Date(Date.UTC(p.year, p.month - 1, p.day + (p.hour >= 20 ? 1 : 0)));
+    return boundary.getUTCFullYear() + '-' +
+      String(boundary.getUTCMonth() + 1).padStart(2, '0') + '-' +
+      String(boundary.getUTCDate()).padStart(2, '0');
+  }
+  function stampGoodnightCycle() {
+    state.gnCycle = goodnightCycleKey();
+  }
+  function expireGoodnight(remoteAlready) {
+    var hadContent = !!state.gnText || !!state.gnAudio;
+    state.gnText = '';
+    state.gnAudio = null;
+    stampGoodnightCycle();
+    save();
+    renderSleep();
+    showAudio();
+    if ($('gn-text')) $('gn-text').value = '';
+    if ($('rec-status') && hadContent) $('rec-status').textContent = 'cleared for a fresh goodnight \u2665';
+    if (!remoteAlready && roomRef) {
+      roomRef.child('gnText').set('').catch(function () {});
+      roomRef.child('gnAudio').remove().catch(function () {});
+      roomRef.child('gnCycle').set(state.gnCycle).catch(function () {});
+    }
+  }
+  function checkGoodnightExpiry() {
+    var current = goodnightCycleKey();
+    if (!state.gnCycle) {
+      state.gnCycle = current;
+      save();
+      syncSet('gnCycle', current);
+      return;
+    }
+    if (state.gnCycle !== current) expireGoodnight(false);
+  }
 
   function loadPending() {
     try { return JSON.parse(localStorage.getItem(PENDING_KEY) || '[]'); } catch (e) { return []; }
@@ -470,12 +524,16 @@
   }
   function renderCount() {
     var el = $('heart-count');
+    var totalEl = $('heart-total');
     var t = heartsToday();
     var total = state.stars.length;
-    el.innerHTML = total === 0
-      ? 'the sky is empty. the first heart starts it.'
-      : '<b>' + t + '</b> heart' + (t === 1 ? '' : 's') + ' in the sky today'
-        + (total !== t ? ' &middot; <b>' + total + '</b> altogether' : '') + '.';
+    if (total === 0) {
+      el.textContent = 'the sky is empty. the first heart starts it.';
+      totalEl.textContent = '';
+      return;
+    }
+    el.innerHTML = '<b>' + t + '</b> heart' + (t === 1 ? '' : 's') + ' in the sky today.';
+    totalEl.innerHTML = '<b>' + total + '</b> all time';
   }
   renderCount();
 
@@ -548,6 +606,7 @@
       });
       roomRef.child('gnText').on('value', function (snap) {
         var v = snap.val();
+        if (v === null) v = '';
         if (typeof v === 'string' && v !== state.gnText) {
           state.gnText = v; save();
           if (document.activeElement !== $('gn-text')) $('gn-text').value = v;
@@ -562,10 +621,22 @@
       });
       roomRef.child('gnAudio').on('value', function (snap) {
         var v = snap.val();
+        if (v === null) {
+          if (state.gnAudio) { state.gnAudio = null; save(); showAudio(); }
+          return;
+        }
         if (typeof v === 'string' && v !== state.gnAudio) {
           state.gnAudio = v; save(); showAudio();
         }
       });
+      roomRef.child('gnCycle').on('value', function (snap) {
+        var v = snap.val();
+        if (typeof v === 'string' && v && state.gnCycle !== v) {
+          state.gnCycle = v;
+          save();
+        }
+      });
+      checkGoodnightExpiry();
       db.ref('.info/connected').on('value', function (snap) {
         if (snap.val() === true) { setSync('live', 'one sky, two phones — live'); flushPending(); }
         else setSync('connecting', 'reconnecting\u2026 hearts are kept safe on this phone');
@@ -785,7 +856,8 @@
   if (state.gnText) $('gn-text').value = state.gnText;
   $('gn-save').addEventListener('click', function () {
     state.gnText = $('gn-text').value.trim();
-    save(); syncSet('gnText', state.gnText); renderSleep();
+    stampGoodnightCycle();
+    save(); syncSet('gnText', state.gnText); syncSet('gnCycle', state.gnCycle); renderSleep();
     $('rec-status').textContent = state.gnText ? 'saved \u2665' : '';
   });
   renderSleep();
@@ -809,8 +881,11 @@
   }
   showAudio();
   $('gn-del').addEventListener('click', function () {
-    state.gnAudio = null; save(); showAudio();
-    if (roomRef) roomRef.child('gnAudio').remove().catch(function () {});
+    state.gnAudio = null; stampGoodnightCycle(); save(); showAudio();
+    if (roomRef) {
+      roomRef.child('gnAudio').remove().catch(function () {});
+      roomRef.child('gnCycle').set(state.gnCycle).catch(function () {});
+    }
     $('rec-status').textContent = '';
   });
   $('rec-btn').addEventListener('click', function () {
@@ -832,10 +907,12 @@
         var reader = new FileReader();
         reader.onload = function () {
           state.gnAudio = reader.result;
+          stampGoodnightCycle();
           try {
             localStorage.setItem(STORE_KEY, JSON.stringify(state));
             if (syncLive && state.gnAudio.length < AUDIO_SYNC_LIMIT) {
               syncSet('gnAudio', state.gnAudio);
+              syncSet('gnCycle', state.gnCycle);
               $('rec-status').textContent = 'saved \u2665 she can play it whenever she needs your voice.';
             } else if (syncLive) {
               $('rec-status').textContent = 'saved on this phone \u2665 \u2014 that take was long, so it lives here rather than in the shared sky. A shorter one, under a minute, syncs.';
@@ -885,6 +962,12 @@
     } else {
       prompt('Copy our link:', url);
     }
+  });
+
+  checkGoodnightExpiry();
+  setInterval(checkGoodnightExpiry, 30000);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) checkGoodnightExpiry();
   });
 
   startSync();
