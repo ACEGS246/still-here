@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Still Here</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+<style>
+  :root {
+    --bg: #120709;
+    --bg2: #1d0b0e;
+    --crimson: #ff4d6d;
+    --crimson-deep: #c9184a;
+    --amber: #f5e6d3;
+    --muted: #b89a86;
+    --soft: #6e5546;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: radial-gradient(ellipse 120% 90% at 50% 110%, var(--bg2) 0%, var(--bg) 55%, #0a0405 100%);
+    color: var(--amber);
+    font-family: Georgia, 'Times New Roman', serif;
+    overflow-x: hidden;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #sky {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    color: #ffd9e0;
+    font-size: 12px;
+    animation: twinkle 3.2s ease-in-out infinite;
+    text-shadow: 0 0 8px var(--crimson);
+    opacity: 0;
+  }
+  .star.born { animation: starIn 1.6s ease-out forwards, twinkle 3.2s ease-in-out 1.6s infinite; }
+  @keyframes starIn {
+    from { opacity: 0; transform: scale(2.2); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: .45; }
+    50% { opacity: 1; }
+  }
+  .fly-heart {
+    position: fixed;
+    color: var(--crimson);
+    font-size: 30px;
+    z-index: 60;
+    pointer-events: none;
+    text-shadow: 0 0 14px var(--crimson-deep);
+  }
+  #moon {
+    position: fixed;
+    top: 7%;
+    right: 9%;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 38% 35%, #ff8fa3 0%, #ff4d6d 38%, #c9184a 72%, #800f2f 100%);
+    box-shadow: 0 0 60px 18px rgba(255, 77, 109, .35), 0 0 140px 40px rgba(201, 24, 74, .18);
+    z-index: 0;
+    pointer-events: none;
+  }
+  main {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 560px;
+    padding: 34px 22px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+  }
+  h1 {
+    font-size: 2.1rem;
+    letter-spacing: .14em;
+    font-weight: normal;
+    color: var(--amber);
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+  h1 .heart-dot { color: var(--crimson); }
+  .tagline { color: var(--muted); font-style: italic; font-size: 1rem; text-align: center; }
+  #sync-line { color: var(--soft); font-style: italic; font-size: .82rem; text-align: center; margin-top: 8px; }
+  #sync-line .dot { font-style: normal; }
+  #sync-line.live { color: #9db4d4; }
+
+  /* ---- sun handoff ---- */
+  #handoff {
+    width: 100%;
+    background: rgba(29, 11, 14, .72);
+    border: 1px solid rgba(255, 77, 109, .22);
+    border-radius: 18px;
+    padding: 20px 18px 16px;
+    backdrop-filter: blur(4px);
+  }
+  #handoff .quote {
+    text-align: center;
+    font-style: italic;
+    color: var(--muted);
+    font-size: .95rem;
+    margin-bottom: 14px;
+  }
+  .clocks { display: flex; gap: 12px; }
+  .clock {
+    flex: 1;
+    text-align: center;
+    background: rgba(10, 4, 5, .5);
+    border-radius: 12px;
+    padding: 14px 8px;
+  }
+  .clock .who { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin-bottom: 6px; }
+  .clock .time { font-size: 1.7rem; color: var(--amber); font-variant-numeric: tabular-nums; }
+  .clock .state { margin-top: 6px; font-size: .95rem; color: var(--muted); }
+  .clock .state.awake { color: #ffd166; }
+  .clock .state.asleep { color: #9db4d4; }
+
+  /* ---- heart ---- */
+  #heart-zone { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  #big-heart {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    transition: transform .12s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #big-heart:active { transform: scale(.9); }
+  #big-heart svg {
+    width: 118px;
+    height: 118px;
+    filter: drop-shadow(0 0 22px rgba(255, 77, 109, .55));
+    animation: heartbeat 2.4s ease-in-out infinite;
+  }
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    12% { transform: scale(1.07); }
+    24% { transform: scale(1); }
+  }
+  #heart-count { color: var(--muted); font-size: .95rem; text-align: center; font-style: italic; }
+  #heart-count b { color: var(--amber); font-style: normal; }
+
+  /* ---- countdown ---- */
+  #countdown-card {
+    width: 100%;
+    background: rgba(29, 11, 14, .72);
+    border: 1px solid rgba(255, 77, 109, .22);
+    border-radius: 18px;
+    padding: 20px 18px;
+    text-align: center;
+    backdrop-filter: blur(4px);
+  }
+  #countdown-card .label {
+    font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--soft); margin-bottom: 4px;
+  }
+  #countdown-card .window { font-style: italic; color: var(--muted); font-size: .92rem; margin-bottom: 12px; }
+  #countdown { font-size: 2rem; font-variant-numeric: tabular-nums; color: var(--amber); letter-spacing: .06em; }
+  #countdown small { font-size: 1rem; color: var(--soft); }
+  #change-date {
+    margin-top: 12px;
+    background: none;
+    border: 1px solid var(--soft);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-family: inherit;
+    font-size: .85rem;
+    cursor: pointer;
+  }
+  #change-date:hover { border-color: var(--crimson); color: var(--amber); }
+
+  /* ---- shared card ---- */
+  .card {
+    width: 100%;
+    background: rgba(29, 11, 14, .72);
+    border: 1px solid rgba(255, 77, 109, .22);
+    border-radius: 18px;
+    padding: 20px 18px;
+    backdrop-filter: blur(4px);
+  }
+  .card .card-label {
+    font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--soft);
+    margin-bottom: 10px; text-align: center;
+  }
+  .pill {
+    background: none;
+    border: 1px solid var(--soft);
+    color: var(--muted);
+    border-radius: 999px;
+    padding: 7px 16px;
+    font-family: inherit;
+    font-size: .85rem;
+    cursor: pointer;
+  }
+  .pill:hover { border-color: var(--crimson); color: var(--amber); }
+  .pill.recording { border-color: var(--crimson); color: var(--crimson); }
+
+  /* ---- question ---- */
+  #q-text { font-size: 1.15rem; font-style: italic; color: var(--amber); text-align: center; margin-bottom: 16px; }
+  .ans-label { display: block; font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin: 12px 0 6px; }
+  textarea {
+    width: 100%;
+    background: rgba(10, 4, 5, .55);
+    border: 1px solid rgba(255, 77, 109, .18);
+    border-radius: 10px;
+    color: var(--amber);
+    font-family: inherit;
+    font-size: .95rem;
+    padding: 10px 12px;
+    resize: vertical;
+  }
+  textarea:focus { outline: none; border-color: var(--crimson); }
+  .ans-quote {
+    background: rgba(10, 4, 5, .5);
+    border-left: 2px solid var(--crimson-deep);
+    border-radius: 6px;
+    padding: 10px 12px;
+    color: var(--amber);
+    font-size: .98rem;
+    white-space: pre-wrap;
+  }
+  .sealed-note { color: var(--muted); font-style: italic; font-size: .92rem; }
+  .edit-link { background: none; border: none; color: var(--soft); font-family: inherit; font-size: .8rem; font-style: italic; cursor: pointer; margin-top: 6px; padding: 0; }
+  .edit-link:hover { color: var(--amber); }
+  #reveal-banner { text-align: center; color: var(--crimson); font-style: italic; margin-bottom: 6px; }
+  .seal-row { margin-top: 8px; }
+
+  /* ---- sleep / wind-down ---- */
+  #stars-line { text-align: center; color: var(--muted); font-style: italic; font-size: .95rem; margin-bottom: 12px; }
+  .gn-line { text-align: center; font-size: 1.2rem; font-style: italic; color: var(--amber); margin: 8px 0 14px; }
+  .sleep-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin-top: 10px; }
+  #rec-status { color: var(--muted); font-size: .85rem; font-style: italic; }
+  #gn-audio { width: 100%; margin-top: 12px; }
+  #winddown-hint { color: #9db4d4; font-size: .85rem; font-style: italic; }
+  #winddown-btn.late { border-color: #9db4d4; color: #cdd9ee; box-shadow: 0 0 12px rgba(157, 180, 212, .35); }
+  body.winddown .dim { opacity: .1; pointer-events: none; filter: saturate(.5); transition: opacity 1.2s ease; }
+  body.winddown #handoff { opacity: .45; transition: opacity 1.2s ease; }
+  body.winddown #moon { transform: scale(1.3); transition: transform 2s ease; }
+  body.winddown .star { animation-duration: 8s; }
+  body.winddown { background: radial-gradient(ellipse 120% 90% at 50% 110%, #140608 0%, #0a0304 60%, #050202 100%); }
+  #handoff, #heart-zone, #question-card, #countdown-card { transition: opacity 1.2s ease; }
+
+  footer { color: var(--soft); font-size: .8rem; font-style: italic; text-align: center; }
+  footer .pill { margin-top: 10px; font-style: normal; }
+</style>
+</head>
+<body>
+<div id="moon"></div>
+<div id="sky"></div>
+
+<main>
+  <div>
+    <h1>Still Here <span class="heart-dot">♥</span></h1>
+    <p class="tagline">presence, without pressure</p>
+    <p id="sync-line"><span class="dot">○</span> <span id="sync-text">this device only — for now</span></p>
+  </div>
+
+  <section id="handoff">
+    <p class="quote">&ldquo;my sun&rsquo;s going down so yours is probably coming up&rdquo;</p>
+    <div class="clocks">
+      <div class="clock">
+        <div class="who">Sydney &mdash; Ethan</div>
+        <div class="time" id="time-his">--:--</div>
+        <div class="state" id="state-his"></div>
+      </div>
+      <div class="clock">
+        <div class="who">Indianapolis &mdash; Adwi</div>
+        <div class="time" id="time-her">--:--</div>
+        <div class="state" id="state-her"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="heart-zone" class="dim">
+    <button id="big-heart" aria-label="Send a heart">
+      <svg viewBox="0 0 24 24" fill="#ff4d6d" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+      </svg>
+    </button>
+    <p id="heart-count"></p>
+  </section>
+
+  <section id="question-card" class="card dim">
+    <div class="card-label">Today's question</div>
+    <p id="q-text"></p>
+    <div id="reveal-banner" style="display:none">both answers are in — they open together &hearts;</div>
+
+    <div id="his-zone">
+      <span class="ans-label">Ethan's answer</span>
+      <div id="his-edit">
+        <textarea id="ans-his" rows="3" placeholder="type it out — the real stuff comes out typed"></textarea>
+        <div class="seal-row"><button class="pill" id="save-his">seal my answer</button></div>
+      </div>
+      <div id="his-sealed" style="display:none">
+        <div class="ans-quote" id="his-quote"></div>
+        <button class="edit-link" id="edit-his">edit</button>
+      </div>
+    </div>
+
+    <div id="hers-zone">
+      <span class="ans-label">Adwi's answer</span>
+      <p class="sealed-note" id="hers-locked">sealed until she answers &hearts; — her words unlock once his are sealed. No peeking; that's the deal.</p>
+      <div id="hers-edit" style="display:none">
+        <textarea id="ans-hers" rows="3" placeholder="her words go here — typed, in her own time"></textarea>
+        <div class="seal-row"><button class="pill" id="save-hers">seal her answer</button></div>
+      </div>
+      <div id="hers-sealed" style="display:none">
+        <div class="ans-quote" id="hers-quote"></div>
+        <button class="edit-link" id="edit-hers">edit</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="countdown-card" class="dim">
+    <div class="label">The golden window</div>
+    <div class="window" id="window-desc">Saturday 10:00am your time &middot; Friday 7:00pm hers</div>
+    <div id="countdown">--:--:--:--</div>
+    <button id="change-date">set a new date</button>
+  </section>
+
+  <section id="sleep-card" class="card">
+    <div class="card-label">For her sleep</div>
+    <p id="stars-line"></p>
+    <p class="gn-line" id="gn-display"></p>
+    <div id="gn-edit">
+      <textarea id="gn-text" rows="2" placeholder="the goodnight words she'll read — write them once, they're here every night"></textarea>
+      <div class="seal-row" style="text-align:center"><button class="pill" id="gn-save">save the words</button></div>
+    </div>
+    <div class="sleep-row">
+      <button class="pill" id="rec-btn">&#9679; record a goodnight</button>
+      <span id="rec-status"></span>
+    </div>
+    <audio id="gn-audio" controls style="display:none"></audio>
+    <div class="sleep-row">
+      <button class="pill" id="gn-del" style="display:none">delete recording</button>
+    </div>
+    <div class="sleep-row">
+      <button class="pill" id="winddown-btn">&#127769; wind down</button>
+      <span id="winddown-hint"></span>
+    </div>
+  </section>
+
+  <footer>
+    every heart lands in the same sky. no reply owed, ever.
+    <br><button class="pill" id="copy-link">copy our link</button>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ============================================================
+     LIVE SYNC — Firebase Realtime Database
+     Paste the web app's firebaseConfig below (from the Firebase
+     console: Project settings → Your apps → Web app).
+     Until then the page runs on this device only, exactly as v1.
+     The room code in the link (?room=...) is the shared sky's key:
+     both phones must open the SAME link.
+     ============================================================ */
+  var FIREBASE_CONFIG = {
+    apiKey: 'AIzaSyAUyLLEwyGChx1JIlABuu2LGvaD3HK8Xxk',
+    authDomain: 'still-here-c85b2.firebaseapp.com',
+    databaseURL: 'https://still-here-c85b2-default-rtdb.firebaseio.com',
+    projectId: 'still-here-c85b2',
+    appId: '1:337168171101:web:0a1413b23bd55ba91a0db4'
+  };
+  var SYNC_CONFIGURED = FIREBASE_CONFIG.apiKey.indexOf('PASTE') !== 0;
+
+  var STORE_KEY = 'stillHere.v1';
+  var ROOM_KEY = 'stillHere.room';
+  var PENDING_KEY = 'stillHere.pendingStars';
+  var DEFAULT_TARGET = '2026-10-24T10:00:00+11:00'; // Sat 24 Oct 10:00am AEDT = Fri 23 Oct 7:00pm EDT
+  var AUDIO_SYNC_LIMIT = 700000; // chars of data URL — a short voice note fits; longer stays local
+
+  function $(id) { return document.getElementById(id); }
+
+  function getRoom() {
+    var r = null;
+    try {
+      r = new URLSearchParams(location.search).get('room');
+      if (!r && location.hash) {
+        var m = location.hash.match(/room=([A-Za-z0-9_-]+)/);
+        if (m) r = m[1];
+      }
+      if (!r) r = localStorage.getItem(ROOM_KEY);
+    } catch (e) {}
+    if (!r) {
+      r = 'sky-' + Math.random().toString(36).slice(2, 8) + Math.random().toString(36).slice(2, 6);
+    }
+    try {
+      localStorage.setItem(ROOM_KEY, r);
+      history.replaceState(null, '', location.pathname + '?room=' + r);
+    } catch (e) {}
+    return r;
+  }
+  var ROOM = getRoom();
+
+  /* ---- local state (cache + offline fallback) ---- */
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORE_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch (e) {}
+    return { hearts: 0, stars: [], target: DEFAULT_TARGET, answers: {}, gnText: '', gnAudio: null };
+  }
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  var state = load();
+  if (!state.answers) state.answers = {};
+  if (!state.stars) state.stars = [];
+  if (typeof state.gnText !== 'string') state.gnText = '';
+  if (!('gnAudio' in state)) state.gnAudio = null;
+  if (!state.target) state.target = DEFAULT_TARGET;
+
+  function newCid() {
+    return 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  }
+  state.stars.forEach(function (st) { if (!st.cid) st.cid = newCid(); });
+  state.hearts = state.stars.length;
+  save();
+
+  function loadPending() {
+    try { return JSON.parse(localStorage.getItem(PENDING_KEY) || '[]'); } catch (e) { return []; }
+  }
+  function savePending(list) {
+    try { localStorage.setItem(PENDING_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+  var pendingStars = loadPending();
+
+  /* ---- sky ---- */
+  var sky = $('sky');
+  var renderedCids = {};
+  function addStar(x, y, born) {
+    var s = document.createElement('div');
+    s.className = 'star' + (born ? ' born' : '');
+    s.textContent = '\u2726';
+    s.style.left = x + '%';
+    s.style.top = y + '%';
+    s.style.fontSize = (9 + Math.random() * 9).toFixed(0) + 'px';
+    s.style.animationDelay = (Math.random() * 3).toFixed(1) + 's';
+    sky.appendChild(s);
+  }
+  function renderStar(st, born) {
+    if (st.cid && renderedCids[st.cid]) return;
+    if (st.cid) renderedCids[st.cid] = true;
+    addStar(st.x, st.y, born);
+  }
+  state.stars.forEach(function (st) { renderStar(st, false); });
+
+  function todayKey() {
+    return new Date().toISOString().slice(0, 10);
+  }
+  function heartsToday() {
+    return state.stars.filter(function (st) { return st.day === todayKey(); }).length;
+  }
+  function renderCount() {
+    var el = $('heart-count');
+    var t = heartsToday();
+    var total = state.stars.length;
+    el.innerHTML = total === 0
+      ? 'the sky is empty. the first heart starts it.'
+      : '<b>' + t + '</b> heart' + (t === 1 ? '' : 's') + ' in the sky today'
+        + (total !== t ? ' &middot; <b>' + total + '</b> altogether' : '') + '.';
+  }
+  renderCount();
+
+  /* ---- sync engine ---- */
+  var db = null, starsRef = null, roomRef = null, syncLive = false;
+  function setSync(mode, text) {
+    var line = $('sync-line');
+    line.classList.toggle('live', mode === 'live');
+    line.querySelector('.dot').textContent = mode === 'live' ? '\u25CF' : '\u25CB';
+    $('sync-text').textContent = text;
+  }
+  function pushStar(star) {
+    if (!starsRef) return;
+    starsRef.push({ x: star.x, y: star.y, day: star.day, cid: star.cid, ts: star.ts || Date.now() })
+      .catch(function () {
+        if (pendingStars.indexOf(star.cid) === -1) { pendingStars.push(star.cid); savePending(pendingStars); }
+      });
+  }
+  function flushPending() {
+    if (!starsRef) return;
+    var still = [];
+    pendingStars.forEach(function (cid) {
+      var st = null;
+      state.stars.forEach(function (s) { if (s.cid === cid) st = s; });
+      if (st) pushStar(st); else still.push(cid);
+    });
+    pendingStars = still;
+    savePending(pendingStars);
+  }
+  function syncSet(path, value) {
+    if (!roomRef) return;
+    roomRef.child(path).set(value).catch(function () {});
+  }
+  function startSync() {
+    if (!SYNC_CONFIGURED) { setSync('local', 'this device only — for now'); return; }
+    if (typeof firebase === 'undefined') { setSync('local', 'sync library blocked — this device only'); return; }
+    setSync('connecting', 'reaching for the shared sky\u2026');
+    try {
+      firebase.initializeApp(FIREBASE_CONFIG);
+    } catch (e) { setSync('local', 'sync didn\u2019t start — this device only'); return; }
+    firebase.auth().signInAnonymously().then(function () {
+      db = firebase.database();
+      roomRef = db.ref('rooms/' + ROOM);
+      starsRef = roomRef.child('stars');
+      syncLive = true;
+      setSync('live', 'one sky, two phones — live');
+
+      starsRef.on('child_added', function (snap) {
+        var st = snap.val();
+        if (!st || !st.cid) return;
+        var known = false;
+        state.stars.forEach(function (s) { if (s.cid === st.cid) known = true; });
+        if (!known) {
+          state.stars.push(st);
+          state.hearts = state.stars.length;
+          save();
+          renderStar(st, (Date.now() - (st.ts || 0)) < 10000);
+          renderCount();
+          renderSleep();
+        }
+        // our own star confirmed — drop it from the pending queue
+        var pi = pendingStars.indexOf(st.cid);
+        if (pi !== -1) { pendingStars.splice(pi, 1); savePending(pendingStars); }
+      });
+      flushPending();
+
+      roomRef.child('answers').on('value', function (snap) {
+        var v = snap.val();
+        if (v) { state.answers = v; save(); renderQuestion(); }
+      });
+      roomRef.child('gnText').on('value', function (snap) {
+        var v = snap.val();
+        if (typeof v === 'string' && v !== state.gnText) {
+          state.gnText = v; save();
+          if (document.activeElement !== $('gn-text')) $('gn-text').value = v;
+          renderSleep();
+        }
+      });
+      roomRef.child('target').on('value', function (snap) {
+        var v = snap.val();
+        if (typeof v === 'string' && v !== state.target) {
+          state.target = v; save(); renderWindowDesc(); tickCountdown();
+        }
+      });
+      roomRef.child('gnAudio').on('value', function (snap) {
+        var v = snap.val();
+        if (typeof v === 'string' && v !== state.gnAudio) {
+          state.gnAudio = v; save(); showAudio();
+        }
+      });
+      db.ref('.info/connected').on('value', function (snap) {
+        if (snap.val() === true) { setSync('live', 'one sky, two phones — live'); flushPending(); }
+        else setSync('connecting', 'reconnecting\u2026 hearts are kept safe on this phone');
+      });
+    }).catch(function () {
+      setSync('local', 'sync sign-in failed — this device only');
+    });
+  }
+
+  /* ---- heart tap ---- */
+  $('big-heart').addEventListener('click', function () {
+    var btn = this;
+    var r = btn.getBoundingClientRect();
+    var sx = r.left + r.width / 2;
+    var sy = r.top + r.height / 2;
+
+    var h = document.createElement('div');
+    h.className = 'fly-heart';
+    h.textContent = '\u2665';
+    h.style.left = (sx - 15) + 'px';
+    h.style.top = (sy - 15) + 'px';
+    document.body.appendChild(h);
+
+    var dy = 6 + Math.random() * 22;
+    var lx = (sx / window.innerWidth * 100) + (Math.random() * 24 - 12);
+    lx = Math.max(4, Math.min(94, lx));
+
+    h.animate([
+      { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+      { transform: 'translate(' + ((lx / 100 * window.innerWidth) - sx) + 'px, ' + (-sy + dy / 100 * window.innerHeight) + 'px) scale(.7)', opacity: .9 }
+    ], { duration: 1400, easing: 'cubic-bezier(.22,.8,.36,1)' }).onfinish = function () {
+      h.remove();
+      var star = { x: lx, y: dy, day: todayKey(), cid: newCid(), ts: Date.now() };
+      state.stars.push(star);
+      state.hearts = state.stars.length;
+      save();
+      renderStar(star, true);
+      renderCount();
+      renderSleep();
+      if (syncLive) pushStar(star);
+      else if (SYNC_CONFIGURED) { pendingStars.push(star.cid); savePending(pendingStars); }
+    };
+  });
+
+  /* ---- clocks ---- */
+  var fmtTime = function (tz) {
+    return new Intl.DateTimeFormat('en-AU', {
+      timeZone: tz, hour: '2-digit', minute: '2-digit', hour12: true
+    });
+  };
+  var fmtHour = function (tz) {
+    return new Intl.DateTimeFormat('en-AU', {
+      timeZone: tz, hour: 'numeric', hour12: false
+    });
+  };
+  function hourIn(tz) {
+    var h = parseInt(fmtHour(tz).format(new Date()), 10);
+    return h % 24;
+  }
+  function hisState(h) {
+    if (h >= 23 || h < 7) return { t: '\u{1F4A4} probably asleep', c: 'asleep' };
+    return { t: '\u2600\uFE0F awake', c: 'awake' };
+  }
+  function herState(h) {
+    // her sleep is beautifully chaotic — keep the read soft and honest
+    if (h >= 23 || h < 6) return { t: '\u{1F4A4} probably asleep', c: 'asleep' };
+    if (h >= 6 && h < 9) return { t: '\u{1F305} probably waking', c: 'awake' };
+    return { t: '\u2600\uFE0F probably awake', c: 'awake' };
+  }
+  function tickClocks() {
+    var now = new Date();
+    $('time-his').textContent = fmtTime('Australia/Sydney').format(now);
+    $('time-her').textContent = fmtTime('America/Indiana/Indianapolis').format(now);
+    var hs = hisState(hourIn('Australia/Sydney'));
+    var rs = herState(hourIn('America/Indiana/Indianapolis'));
+    var se = $('state-his');
+    se.textContent = hs.t; se.className = 'state ' + hs.c;
+    var re = $('state-her');
+    re.textContent = rs.t; re.className = 'state ' + rs.c;
+  }
+  tickClocks();
+  setInterval(tickClocks, 1000);
+
+  /* ---- countdown ---- */
+  function targetDate() { return new Date(state.target); }
+  function renderWindowDesc() {
+    var d = targetDate();
+    var his = new Intl.DateTimeFormat('en-AU', {
+      timeZone: 'Australia/Sydney', weekday: 'long', hour: 'numeric', minute: '2-digit', hour12: true
+    }).format(d);
+    var hers = new Intl.DateTimeFormat('en-AU', {
+      timeZone: 'America/Indiana/Indianapolis', weekday: 'long', hour: 'numeric', minute: '2-digit', hour12: true
+    }).format(d);
+    $('window-desc').textContent = his + ' your time \u00B7 ' + hers + ' hers';
+  }
+  function tickCountdown() {
+    var diff = targetDate().getTime() - Date.now();
+    var el = $('countdown');
+    if (diff <= 0) { el.innerHTML = 'it\u2019s time <small>\u2665</small>'; return; }
+    var s = Math.floor(diff / 1000);
+    var d = Math.floor(s / 86400); s -= d * 86400;
+    var h = Math.floor(s / 3600); s -= h * 3600;
+    var m = Math.floor(s / 60); s -= m * 60;
+    function p(n) { return String(n).padStart(2, '0'); }
+    el.innerHTML = d + '<small>d</small> ' + p(h) + '<small>h</small> ' + p(m) + '<small>m</small> ' + p(s) + '<small>s</small>';
+  }
+  renderWindowDesc();
+  tickCountdown();
+  setInterval(tickCountdown, 1000);
+
+  $('change-date').addEventListener('click', function () {
+    var cur = targetDate();
+    var input = prompt('New countdown target (YYYY-MM-DD HH:MM, Sydney time):',
+      cur.getFullYear() + '-' + String(cur.getMonth() + 1).padStart(2, '0') + '-' +
+      String(cur.getDate()).padStart(2, '0') + ' ' +
+      String(cur.getHours()).padStart(2, '0') + ':' + String(cur.getMinutes()).padStart(2, '0'));
+    if (!input) return;
+    var m = input.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})$/);
+    if (!m) { alert('Could not read that date — try YYYY-MM-DD HH:MM.'); return; }
+    // interpret in Sydney time (AEDT, UTC+11 for Oct–Apr)
+    var iso = m[1] + '-' + m[2] + '-' + m[3] + 'T' + m[4] + ':' + m[5] + ':00+11:00';
+    var nd = new Date(iso);
+    if (isNaN(nd.getTime())) { alert('That date did not work — try again.'); return; }
+    state.target = iso;
+    save();
+    syncSet('target', iso);
+    renderWindowDesc();
+    tickCountdown();
+  });
+
+  /* ---- daily question (both answer to reveal) ---- */
+  var QUESTIONS = [
+    'One small thing that made you smile today?',
+    'If we could share one meal right now, what are we eating?',
+    'A song that feels like us \u2014 and why that one?',
+    'What\u2019s something you\u2019re oddly good at that most people don\u2019t know?',
+    'Describe your perfect lazy day, start to finish.',
+    'What\u2019s a place near you that you wish you could show me first?',
+    'What\u2019s the kindest thing someone has ever done for you?',
+    'When do you feel most like yourself?',
+    'What\u2019s something you believed as a kid that you laugh at now?',
+    'What\u2019s a fear you\u2019ve quietly outgrown?',
+    'What do you wish people understood about you sooner?',
+    'When did you last feel really proud of yourself?',
+    'What\u2019s something you want us to still be doing a year from now?',
+    'What does a good life look like to you, five years from now?',
+    'What\u2019s one thing you never want us to stop doing?'
+  ];
+  var Q_EPOCH = Date.UTC(2026, 9, 22);
+  var qIdx = Math.floor((Date.now() - Q_EPOCH) / 86400000) % QUESTIONS.length;
+  if (qIdx < 0) qIdx = 0;
+  $('q-text').textContent = QUESTIONS[qIdx];
+
+  function curAnswer() {
+    if (!state.answers[qIdx]) state.answers[qIdx] = { his: '', hers: '', hisSealed: false, hersSealed: false };
+    return state.answers[qIdx];
+  }
+  function renderQuestion() {
+    var a = curAnswer();
+    if (a.hisSealed) {
+      $('his-edit').style.display = 'none';
+      $('his-sealed').style.display = 'block';
+      $('his-quote').textContent = a.his;
+    } else {
+      $('his-edit').style.display = 'block';
+      $('his-sealed').style.display = 'none';
+      if (document.activeElement !== $('ans-his')) $('ans-his').value = a.his || '';
+    }
+    if (a.hersSealed) {
+      $('hers-locked').style.display = 'none';
+      $('hers-edit').style.display = 'none';
+      $('hers-sealed').style.display = 'block';
+      $('hers-quote').textContent = a.hers;
+    } else if (a.hisSealed) {
+      $('hers-locked').style.display = 'none';
+      $('hers-edit').style.display = 'block';
+      $('hers-sealed').style.display = 'none';
+      if (document.activeElement !== $('ans-hers')) $('ans-hers').value = a.hers || '';
+    } else {
+      $('hers-locked').style.display = 'block';
+      $('hers-edit').style.display = 'none';
+      $('hers-sealed').style.display = 'none';
+    }
+    $('reveal-banner').style.display = (a.hisSealed && a.hersSealed) ? 'block' : 'none';
+  }
+  function syncAnswer() {
+    syncSet('answers/' + qIdx, curAnswer());
+  }
+  $('save-his').addEventListener('click', function () {
+    var a = curAnswer();
+    a.his = $('ans-his').value.trim();
+    if (!a.his) return;
+    a.hisSealed = true; save(); syncAnswer(); renderQuestion();
+  });
+  $('edit-his').addEventListener('click', function () {
+    var a = curAnswer(); a.hisSealed = false; save(); syncAnswer(); renderQuestion();
+  });
+  $('save-hers').addEventListener('click', function () {
+    var a = curAnswer();
+    a.hers = $('ans-hers').value.trim();
+    if (!a.hers) return;
+    a.hersSealed = true; save(); syncAnswer(); renderQuestion();
+  });
+  $('edit-hers').addEventListener('click', function () {
+    var a = curAnswer(); a.hersSealed = false; save(); syncAnswer(); renderQuestion();
+  });
+  renderQuestion();
+
+  /* ---- goodnight words + the sky she sleeps under ---- */
+  function renderSleep() {
+    var n = state.stars.length;
+    $('stars-line').textContent = n === 0
+      ? 'her sky is still empty \u2014 the first heart starts it.'
+      : 'tonight she falls asleep under a sky of ' + n + ' star' + (n === 1 ? '' : 's') + ' you put there.';
+  }
+  if (state.gnText) $('gn-text').value = state.gnText;
+  $('gn-save').addEventListener('click', function () {
+    state.gnText = $('gn-text').value.trim();
+    save(); syncSet('gnText', state.gnText); renderSleep();
+    $('rec-status').textContent = state.gnText ? 'saved \u2665' : '';
+  });
+  renderSleep();
+  setInterval(renderSleep, 5000);
+
+  /* ---- goodnight voice note ---- */
+  var mediaRecorder = null, recChunks = [], recStream = null;
+  function showAudio() {
+    var au = $('gn-audio');
+    if (state.gnAudio) {
+      au.src = state.gnAudio;
+      au.style.display = 'block';
+      $('gn-del').style.display = 'inline-block';
+      $('rec-btn').innerHTML = '&#9679; record it again';
+    } else {
+      au.removeAttribute('src');
+      au.style.display = 'none';
+      $('gn-del').style.display = 'none';
+      $('rec-btn').innerHTML = '&#9679; record a goodnight';
+    }
+  }
+  showAudio();
+  $('gn-del').addEventListener('click', function () {
+    state.gnAudio = null; save(); showAudio();
+    if (roomRef) roomRef.child('gnAudio').remove().catch(function () {});
+    $('rec-status').textContent = '';
+  });
+  $('rec-btn').addEventListener('click', function () {
+    if (mediaRecorder && mediaRecorder.state === 'recording') { mediaRecorder.stop(); return; }
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
+      $('rec-status').textContent = 'mic isn\u2019t available in this browser \u2014 the written goodnight above still works.';
+      return;
+    }
+    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
+      recStream = stream;
+      recChunks = [];
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = function (e) { if (e.data && e.data.size) recChunks.push(e.data); };
+      mediaRecorder.onstop = function () {
+        if (recStream) recStream.getTracks().forEach(function (t) { t.stop(); });
+        $('rec-btn').classList.remove('recording');
+        $('rec-btn').innerHTML = '&#9679; record a goodnight';
+        var blob = new Blob(recChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
+        var reader = new FileReader();
+        reader.onload = function () {
+          state.gnAudio = reader.result;
+          try {
+            localStorage.setItem(STORE_KEY, JSON.stringify(state));
+            if (syncLive && state.gnAudio.length < AUDIO_SYNC_LIMIT) {
+              syncSet('gnAudio', state.gnAudio);
+              $('rec-status').textContent = 'saved \u2665 she can play it whenever she needs your voice.';
+            } else if (syncLive) {
+              $('rec-status').textContent = 'saved on this phone \u2665 \u2014 that take was long, so it lives here rather than in the shared sky. A shorter one, under a minute, syncs.';
+            } else {
+              $('rec-status').textContent = 'saved \u2665 she can play it whenever she needs your voice.';
+            }
+          } catch (err) {
+            state.gnAudio = null; save();
+            $('rec-status').textContent = 'that take was too long to keep \u2014 try a shorter one, under a minute.';
+          }
+          showAudio();
+        };
+        reader.readAsDataURL(blob);
+      };
+      mediaRecorder.start();
+      $('rec-btn').classList.add('recording');
+      $('rec-btn').innerHTML = '&#9632; stop';
+      $('rec-status').textContent = 'recording\u2026 keep it short and soft.';
+    }).catch(function () {
+      $('rec-status').textContent = 'mic permission said no \u2014 the written goodnight above still works.';
+    });
+  });
+
+  /* ---- wind-down ---- */
+  var windBtn = $('winddown-btn');
+  windBtn.addEventListener('click', function () {
+    var on = document.body.classList.toggle('winddown');
+    windBtn.innerHTML = on ? '&#9728;&#65038; wake the sky' : '&#127769; wind down';
+  });
+  function tickWindHint() {
+    var h = hourIn('America/Indiana/Indianapolis');
+    var late = (h >= 23 || h < 5);
+    windBtn.classList.toggle('late', late);
+    $('winddown-hint').textContent = late ? 'it\u2019s late for her \u2014 goodnight hours' : '';
+  }
+  tickWindHint();
+  setInterval(tickWindHint, 30000);
+
+  /* ---- share link ---- */
+  $('copy-link').addEventListener('click', function () {
+    var url = location.origin === 'null' || location.protocol === 'file:'
+      ? location.href
+      : location.origin + location.pathname + '?room=' + ROOM;
+    function done() { $('copy-link').textContent = 'copied \u2665 send her this exact link'; }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(done).catch(function () { prompt('Copy our link:', url); });
+    } else {
+      prompt('Copy our link:', url);
+    }
+  });
+
+  startSync();
+})();
+</script>
+</body>
+</html>
