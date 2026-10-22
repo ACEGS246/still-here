@@ -725,10 +725,11 @@
   }
   function renderQuestion() {
     var a = curAnswer();
+    var both = a.hisSealed && a.hersSealed;
     if (a.hisSealed) {
       $('his-edit').style.display = 'none';
       $('his-sealed').style.display = 'block';
-      $('his-quote').textContent = a.his;
+      $('his-quote').textContent = both ? a.his : 'sealed \u2665 \u2014 hidden until both answers are in';
     } else {
       $('his-edit').style.display = 'block';
       $('his-sealed').style.display = 'none';
@@ -738,7 +739,7 @@
       $('hers-locked').style.display = 'none';
       $('hers-edit').style.display = 'none';
       $('hers-sealed').style.display = 'block';
-      $('hers-quote').textContent = a.hers;
+      $('hers-quote').textContent = both ? a.hers : 'sealed \u2665 \u2014 hidden until both answers are in';
     } else if (a.hisSealed) {
       $('hers-locked').style.display = 'none';
       $('hers-edit').style.display = 'block';
