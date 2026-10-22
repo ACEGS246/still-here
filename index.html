@@ -41,7 +41,7 @@
     color: #ffd9e0;
     font-size: 12px;
     animation: twinkle 3.2s ease-in-out infinite;
-    text-shadow: 0 0 8px var(--crimson);
+    text-shadow: 0 0 8px currentColor;
     opacity: 0;
   }
   .star.born { animation: starIn 1.6s ease-out forwards, twinkle 3.2s ease-in-out 1.6s infinite; }
@@ -150,6 +150,17 @@
     12% { transform: scale(1.07); }
     24% { transform: scale(1); }
   }
+  .palette-label { color: var(--soft); font-size: .75rem; letter-spacing: .12em; text-transform: uppercase; text-align: center; }
+  #heart-palette { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  .heart-choice {
+    width: 58px; min-height: 54px; border-radius: 999px; cursor: pointer;
+    background: rgba(10, 4, 5, .5); border: 1px solid rgba(255,255,255,.08);
+    color: var(--choice); font-family: inherit; font-size: 1.35rem; line-height: 1;
+    padding: 7px 2px 6px; -webkit-tap-highlight-color: transparent;
+  }
+  .heart-choice span { display: block; margin-top: 4px; color: var(--muted); font-size: .52rem; letter-spacing: .02em; }
+  .heart-choice.selected { border-color: var(--choice); box-shadow: 0 0 12px var(--choice); background: rgba(255,255,255,.06); }
+  #heart-meaning { color: var(--muted); font-size: .9rem; font-style: italic; text-align: center; margin-top: -6px; }
   #heart-count { color: var(--muted); font-size: .95rem; text-align: center; font-style: italic; }
   #heart-count b { color: var(--amber); font-style: normal; }
   #heart-total { color: var(--soft); font-size: .88rem; text-align: center; font-style: italic; margin-top: -8px; }
@@ -240,6 +251,24 @@
   #reveal-banner { text-align: center; color: var(--crimson); font-style: italic; margin-bottom: 6px; }
   .seal-row { margin-top: 8px; }
 
+  /* ---- verse + daily photo ---- */
+  .verse-text { font-size: 1.15rem; font-style: italic; text-align: center; color: var(--amber); line-height: 1.55; }
+  .verse-ref { text-align: center; color: var(--crimson); margin-top: 8px; font-size: .95rem; }
+  input[type="text"] {
+    width: 100%; background: rgba(10, 4, 5, .55); border: 1px solid rgba(255, 77, 109, .18);
+    border-radius: 10px; color: var(--amber); font-family: inherit; font-size: .95rem;
+    padding: 10px 12px; margin-top: 8px;
+  }
+  input[type="text"]:focus { outline: none; border-color: var(--crimson); }
+  .mini-status { color: var(--muted); font-size: .85rem; font-style: italic; }
+  .reset-note { color: var(--soft); font-size: .82rem; font-style: italic; text-align: center; margin-top: 10px; }
+  #daily-photo {
+    width: 100%; max-height: 430px; object-fit: cover; display: block;
+    border-radius: 14px; border: 1px solid rgba(255, 77, 109, .25);
+  }
+  .photo-empty { color: var(--muted); font-style: italic; text-align: center; font-size: .95rem; }
+  label.pill { display: inline-block; }
+
   /* ---- sleep / wind-down ---- */
   #stars-line { text-align: center; color: var(--muted); font-style: italic; font-size: .95rem; margin-bottom: 12px; }
   .gn-line { text-align: center; font-size: 1.2rem; font-style: italic; color: var(--amber); margin: 8px 0 14px; }
@@ -287,11 +316,20 @@
   </section>
 
   <section id="heart-zone" class="dim">
+    <p class="palette-label">Choose what this heart says</p>
+    <div id="heart-palette" aria-label="Heart colours">
+      <button class="heart-choice" data-color="red" style="--choice:#ff4d6d" aria-label="Red heart, just because">&#10084;<span>just because</span></button>
+      <button class="heart-choice" data-color="pink" style="--choice:#ff8fab" aria-label="Pink heart, love you">&#10084;<span>love you</span></button>
+      <button class="heart-choice" data-color="gold" style="--choice:#ffd166" aria-label="Gold heart, proud of you">&#10084;<span>proud of you</span></button>
+      <button class="heart-choice" data-color="purple" style="--choice:#c77dff" aria-label="Purple heart, miss you">&#10084;<span>miss you</span></button>
+      <button class="heart-choice" data-color="blue" style="--choice:#8ecae6" aria-label="Blue heart, sleep well">&#10084;<span>sleep well</span></button>
+    </div>
     <button id="big-heart" aria-label="Send a heart">
       <svg viewBox="0 0 24 24" fill="#ff4d6d" xmlns="http://www.w3.org/2000/svg">
         <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
       </svg>
     </button>
+    <p id="heart-meaning"></p>
     <p id="heart-count"></p>
     <p id="heart-total"></p>
   </section>
@@ -327,11 +365,40 @@
     </div>
   </section>
 
+  <section id="verse-card" class="card">
+    <div class="card-label">Verse of the day</div>
+    <p class="verse-text" id="verse-display"></p>
+    <p class="verse-ref" id="verse-reference-display"></p>
+    <div id="verse-edit">
+      <textarea id="verse-text" rows="3" placeholder="Type today's verse here — only this one is kept"></textarea>
+      <input id="verse-reference" type="text" placeholder="Reference — e.g. Psalm 46:1">
+      <div class="seal-row" style="text-align:center">
+        <button class="pill" id="verse-save">save today's verse</button>
+        <button class="pill" id="verse-clear" style="display:none">clear verse</button>
+      </div>
+      <div class="seal-row" style="text-align:center"><span class="mini-status" id="verse-status"></span></div>
+    </div>
+    <p class="reset-note">A fresh verse can be added after 8:00pm her time.</p>
+  </section>
+
   <section id="countdown-card" class="dim">
     <div class="label">The golden window</div>
     <div class="window" id="window-desc">Saturday 10:00am your time &middot; Friday 7:00pm hers</div>
     <div id="countdown">--:--:--:--</div>
     <button id="change-date">set a new date</button>
+  </section>
+
+  <section id="photo-card" class="card">
+    <div class="card-label">Today's photo</div>
+    <img id="daily-photo" alt="Today's shared photo" style="display:none">
+    <p class="photo-empty" id="photo-empty">No photo for this cycle yet.</p>
+    <div class="sleep-row">
+      <label class="pill" for="photo-input">add a photo</label>
+      <input id="photo-input" type="file" accept="image/*" style="display:none">
+      <button class="pill" id="photo-delete" style="display:none">delete photo</button>
+      <span class="mini-status" id="photo-status"></span>
+    </div>
+    <p class="reset-note">This photo clears on its own at 8:00pm her time.</p>
   </section>
 
   <section id="sleep-card" class="card">
@@ -388,6 +455,14 @@
   var PENDING_KEY = 'stillHere.pendingStars';
   var DEFAULT_TARGET = '2026-10-24T10:00:00+11:00'; // Sat 24 Oct 10:00am AEDT = Fri 23 Oct 7:00pm EDT
   var AUDIO_SYNC_LIMIT = 700000; // chars of data URL — a short voice note fits; longer stays local
+  var PHOTO_SYNC_LIMIT = 850000; // compressed photo data URL kept small enough for the shared room
+  var HEART_COLORS = {
+    red: { value: '#ff4d6d', label: 'just because' },
+    pink: { value: '#ff8fab', label: 'love you' },
+    gold: { value: '#ffd166', label: 'proud of you' },
+    purple: { value: '#c77dff', label: 'miss you' },
+    blue: { value: '#8ecae6', label: 'sleep well' }
+  };
 
   function $(id) { return document.getElementById(id); }
 
@@ -418,7 +493,10 @@
       var raw = localStorage.getItem(STORE_KEY);
       if (raw) return JSON.parse(raw);
     } catch (e) {}
-    return { hearts: 0, stars: [], target: DEFAULT_TARGET, answers: {}, gnText: '', gnAudio: null, gnCycle: '' };
+    return {
+      hearts: 0, stars: [], target: DEFAULT_TARGET, answers: {}, gnText: '', gnAudio: null, gnCycle: '',
+      heartColor: 'red', verse: { text: '', ref: '', cycle: '' }, photo: null, photoCycle: ''
+    };
   }
   function save() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
@@ -429,6 +507,13 @@
   if (typeof state.gnText !== 'string') state.gnText = '';
   if (!('gnAudio' in state)) state.gnAudio = null;
   if (typeof state.gnCycle !== 'string') state.gnCycle = '';
+  if (!HEART_COLORS[state.heartColor]) state.heartColor = 'red';
+  if (!state.verse || typeof state.verse !== 'object') state.verse = { text: '', ref: '', cycle: '' };
+  if (typeof state.verse.text !== 'string') state.verse.text = '';
+  if (typeof state.verse.ref !== 'string') state.verse.ref = '';
+  if (typeof state.verse.cycle !== 'string') state.verse.cycle = '';
+  if (!('photo' in state)) state.photo = null;
+  if (typeof state.photoCycle !== 'string') state.photoCycle = '';
   if (!state.target) state.target = DEFAULT_TARGET;
 
   function newCid() {
@@ -499,12 +584,16 @@
   /* ---- sky ---- */
   var sky = $('sky');
   var renderedCids = {};
-  function addStar(x, y, born) {
+  function heartColourValue(key) {
+    return HEART_COLORS[key] ? HEART_COLORS[key].value : HEART_COLORS.red.value;
+  }
+  function addStar(x, y, born, colorKey) {
     var s = document.createElement('div');
     s.className = 'star' + (born ? ' born' : '');
     s.textContent = '\u2726';
     s.style.left = x + '%';
     s.style.top = y + '%';
+    s.style.color = colorKey ? heartColourValue(colorKey) : '#ffd9e0';
     s.style.fontSize = (9 + Math.random() * 9).toFixed(0) + 'px';
     s.style.animationDelay = (Math.random() * 3).toFixed(1) + 's';
     sky.appendChild(s);
@@ -512,7 +601,7 @@
   function renderStar(st, born) {
     if (st.cid && renderedCids[st.cid]) return;
     if (st.cid) renderedCids[st.cid] = true;
-    addStar(st.x, st.y, born);
+    addStar(st.x, st.y, born, st.color);
   }
   state.stars.forEach(function (st) { renderStar(st, false); });
 
@@ -547,7 +636,7 @@
   }
   function pushStar(star) {
     if (!starsRef) return;
-    starsRef.push({ x: star.x, y: star.y, day: star.day, cid: star.cid, ts: star.ts || Date.now() })
+    starsRef.push({ x: star.x, y: star.y, day: star.day, cid: star.cid, ts: star.ts || Date.now(), color: star.color || 'red' })
       .catch(function () {
         if (pendingStars.indexOf(star.cid) === -1) { pendingStars.push(star.cid); savePending(pendingStars); }
       });
@@ -636,7 +725,42 @@
           save();
         }
       });
-      checkGoodnightExpiry();
+      roomRef.child('verse').on('value', function (snap) {
+        var v = snap.val();
+        if (!v) {
+          if (state.verse.text || state.verse.ref) {
+            state.verse = { text: '', ref: '', cycle: goodnightCycleKey() };
+            save(); renderVerse();
+          }
+          return;
+        }
+        var next = {
+          text: typeof v.text === 'string' ? v.text : '',
+          ref: typeof v.ref === 'string' ? v.ref : '',
+          cycle: typeof v.cycle === 'string' ? v.cycle : ''
+        };
+        if (next.text !== state.verse.text || next.ref !== state.verse.ref || next.cycle !== state.verse.cycle) {
+          state.verse = next; save(); renderVerse();
+        }
+      });
+      roomRef.child('photo').on('value', function (snap) {
+        var v = snap.val();
+        if (v === null) {
+          if (state.photo) { state.photo = null; save(); showPhoto(); }
+          return;
+        }
+        if (typeof v === 'string' && v !== state.photo) {
+          state.photo = v; save(); showPhoto();
+        }
+      });
+      roomRef.child('photoCycle').on('value', function (snap) {
+        var v = snap.val();
+        if (typeof v === 'string' && v && state.photoCycle !== v) {
+          state.photoCycle = v;
+          save();
+        }
+      });
+      runDailyResetChecks();
       db.ref('.info/connected').on('value', function (snap) {
         if (snap.val() === true) { setSync('live', 'one sky, two phones — live'); flushPending(); }
         else setSync('connecting', 'reconnecting\u2026 hearts are kept safe on this phone');
@@ -646,6 +770,29 @@
     });
   }
 
+  /* ---- heart colour choice ---- */
+  function renderHeartChoice() {
+    var info = HEART_COLORS[state.heartColor] || HEART_COLORS.red;
+    document.querySelectorAll('.heart-choice').forEach(function (btn) {
+      var active = btn.getAttribute('data-color') === state.heartColor;
+      btn.classList.toggle('selected', active);
+      btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+    var path = $('big-heart').querySelector('path');
+    if (path) path.setAttribute('fill', info.value);
+    var svg = $('big-heart').querySelector('svg');
+    if (svg) svg.style.filter = 'drop-shadow(0 0 22px ' + info.value + ')';
+    $('heart-meaning').textContent = 'this heart says: ' + info.label;
+  }
+  document.querySelectorAll('.heart-choice').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      state.heartColor = btn.getAttribute('data-color');
+      save();
+      renderHeartChoice();
+    });
+  });
+  renderHeartChoice();
+
   /* ---- heart tap ---- */
   $('big-heart').addEventListener('click', function () {
     var btn = this;
@@ -653,11 +800,14 @@
     var sx = r.left + r.width / 2;
     var sy = r.top + r.height / 2;
 
+    var chosenColor = state.heartColor || 'red';
     var h = document.createElement('div');
     h.className = 'fly-heart';
     h.textContent = '\u2665';
     h.style.left = (sx - 15) + 'px';
     h.style.top = (sy - 15) + 'px';
+    h.style.color = heartColourValue(chosenColor);
+    h.style.textShadow = '0 0 14px ' + heartColourValue(chosenColor);
     document.body.appendChild(h);
 
     var dy = 6 + Math.random() * 22;
@@ -669,7 +819,7 @@
       { transform: 'translate(' + ((lx / 100 * window.innerWidth) - sx) + 'px, ' + (-sy + dy / 100 * window.innerHeight) + 'px) scale(.7)', opacity: .9 }
     ], { duration: 1400, easing: 'cubic-bezier(.22,.8,.36,1)' }).onfinish = function () {
       h.remove();
-      var star = { x: lx, y: dy, day: todayKey(), cid: newCid(), ts: Date.now() };
+      var star = { x: lx, y: dy, day: todayKey(), cid: newCid(), ts: Date.now(), color: chosenColor };
       state.stars.push(star);
       state.hearts = state.stars.length;
       save();
@@ -846,6 +996,151 @@
   });
   renderQuestion();
 
+  /* ---- verse of the day: one manually entered verse per cycle ---- */
+  function renderVerse() {
+    var has = !!(state.verse.text || state.verse.ref);
+    $('verse-display').textContent = has && state.verse.text
+      ? '\u201c' + state.verse.text + '\u201d'
+      : (has ? '' : 'No verse has been added for this cycle yet.');
+    $('verse-reference-display').textContent = has && state.verse.ref ? '\u2014 ' + state.verse.ref : '';
+    if (document.activeElement !== $('verse-text')) $('verse-text').value = state.verse.text || '';
+    if (document.activeElement !== $('verse-reference')) $('verse-reference').value = state.verse.ref || '';
+    $('verse-clear').style.display = has ? 'inline-block' : 'none';
+  }
+  function expireVerse(remoteAlready) {
+    var had = !!(state.verse.text || state.verse.ref);
+    state.verse = { text: '', ref: '', cycle: goodnightCycleKey() };
+    save();
+    renderVerse();
+    if ($('verse-status') && had) $('verse-status').textContent = 'cleared for a fresh verse \u2665';
+    if (!remoteAlready && roomRef) {
+      roomRef.child('verse').set(state.verse).catch(function () {});
+    }
+  }
+  function checkVerseExpiry() {
+    var current = goodnightCycleKey();
+    if (!state.verse.text && !state.verse.ref) {
+      if (state.verse.cycle !== current) { state.verse.cycle = current; save(); }
+      return;
+    }
+    if (!state.verse.cycle) {
+      state.verse.cycle = current;
+      save();
+      syncSet('verse', state.verse);
+      return;
+    }
+    if (state.verse.cycle !== current) expireVerse(false);
+  }
+  $('verse-save').addEventListener('click', function () {
+    state.verse.text = $('verse-text').value.trim();
+    state.verse.ref = $('verse-reference').value.trim();
+    state.verse.cycle = goodnightCycleKey();
+    save();
+    syncSet('verse', state.verse);
+    renderVerse();
+    $('verse-status').textContent = state.verse.text || state.verse.ref
+      ? 'saved \u2665 — only this verse is kept, and it clears at 8:00pm her time.'
+      : '';
+  });
+  $('verse-clear').addEventListener('click', function () {
+    expireVerse(false);
+    $('verse-status').textContent = '';
+  });
+  renderVerse();
+
+  /* ---- today's photo: one compressed image per cycle ---- */
+  function showPhoto() {
+    var img = $('daily-photo');
+    if (state.photo) {
+      img.src = state.photo;
+      img.style.display = 'block';
+      $('photo-empty').style.display = 'none';
+      $('photo-delete').style.display = 'inline-block';
+    } else {
+      img.removeAttribute('src');
+      img.style.display = 'none';
+      $('photo-empty').style.display = 'block';
+      $('photo-delete').style.display = 'none';
+    }
+  }
+  function expirePhoto(remoteAlready) {
+    var had = !!state.photo;
+    state.photo = null;
+    state.photoCycle = goodnightCycleKey();
+    save();
+    showPhoto();
+    if ($('photo-status') && had) $('photo-status').textContent = 'cleared for a fresh photo \u2665';
+    if (!remoteAlready && roomRef) {
+      roomRef.child('photo').remove().catch(function () {});
+      roomRef.child('photoCycle').set(state.photoCycle).catch(function () {});
+    }
+  }
+  function checkPhotoExpiry() {
+    var current = goodnightCycleKey();
+    if (!state.photo) {
+      if (state.photoCycle !== current) { state.photoCycle = current; save(); }
+      return;
+    }
+    if (!state.photoCycle) {
+      state.photoCycle = current;
+      save();
+      syncSet('photoCycle', current);
+      return;
+    }
+    if (state.photoCycle !== current) expirePhoto(false);
+  }
+  $('photo-delete').addEventListener('click', function () {
+    expirePhoto(false);
+    $('photo-status').textContent = '';
+  });
+  $('photo-input').addEventListener('change', function () {
+    var input = this;
+    var file = input.files && input.files[0];
+    input.value = '';
+    if (!file) return;
+    if (!file.type || file.type.indexOf('image/') !== 0) {
+      $('photo-status').textContent = 'that file is not a photo.';
+      return;
+    }
+    $('photo-status').textContent = 'preparing the photo\u2026';
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function () {
+      URL.revokeObjectURL(url);
+      var maxSide = 960;
+      var scale = Math.min(1, maxSide / Math.max(img.naturalWidth || img.width, img.naturalHeight || img.height));
+      var canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round((img.naturalWidth || img.width) * scale));
+      canvas.height = Math.max(1, Math.round((img.naturalHeight || img.height) * scale));
+      var ctx = canvas.getContext('2d');
+      if (!ctx) { $('photo-status').textContent = 'this browser could not prepare that photo.'; return; }
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      var quality = 0.76;
+      var data = canvas.toDataURL('image/jpeg', quality);
+      while (data.length > PHOTO_SYNC_LIMIT && quality > 0.42) {
+        quality -= 0.1;
+        data = canvas.toDataURL('image/jpeg', quality);
+      }
+      if (data.length > PHOTO_SYNC_LIMIT) {
+        $('photo-status').textContent = 'that photo is still too large to share here.';
+        return;
+      }
+      state.photo = data;
+      state.photoCycle = goodnightCycleKey();
+      save();
+      syncSet('photo', state.photo);
+      syncSet('photoCycle', state.photoCycle);
+      showPhoto();
+      $('photo-status').textContent = 'saved \u2665 — it clears at 8:00pm her time.';
+    };
+    img.onerror = function () {
+      URL.revokeObjectURL(url);
+      $('photo-status').textContent = 'that photo could not be opened.';
+    };
+    img.src = url;
+  });
+  showPhoto();
+
   /* ---- goodnight words + the sky she sleeps under ---- */
   function renderSleep() {
     var n = state.stars.length;
@@ -964,10 +1259,15 @@
     }
   });
 
-  checkGoodnightExpiry();
-  setInterval(checkGoodnightExpiry, 30000);
+  function runDailyResetChecks() {
+    checkGoodnightExpiry();
+    checkVerseExpiry();
+    checkPhotoExpiry();
+  }
+  runDailyResetChecks();
+  setInterval(runDailyResetChecks, 30000);
   document.addEventListener('visibilitychange', function () {
-    if (!document.hidden) checkGoodnightExpiry();
+    if (!document.hidden) runDailyResetChecks();
   });
 
   startSync();
