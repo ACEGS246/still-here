@@ -262,11 +262,26 @@
   input[type="text"]:focus { outline: none; border-color: var(--crimson); }
   .mini-status { color: var(--muted); font-size: .85rem; font-style: italic; }
   .reset-note { color: var(--soft); font-size: .82rem; font-style: italic; text-align: center; margin-top: 10px; }
-  #daily-photo {
-    width: 100%; max-height: 430px; object-fit: cover; display: block;
-    border-radius: 14px; border: 1px solid rgba(255, 77, 109, .25);
+  #photo-gallery {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 4px;
   }
+  #photo-gallery img {
+    width: 100%; aspect-ratio: 1; object-fit: cover; display: block; cursor: pointer;
+    border-radius: 12px; border: 1px solid rgba(255, 77, 109, .25);
+  }
+  #photo-gallery img:active { transform: scale(.97); }
   .photo-empty { color: var(--muted); font-style: italic; text-align: center; font-size: .95rem; }
+  #photo-lightbox {
+    position: fixed; inset: 0; z-index: 60; display: none;
+    background: rgba(3, 1, 2, .92); align-items: center; justify-content: center;
+    flex-direction: column; padding: 18px;
+  }
+  #photo-lightbox.open { display: flex; }
+  #photo-lightbox img {
+    max-width: 100%; max-height: 74vh; object-fit: contain;
+    border-radius: 14px; border: 1px solid rgba(255, 77, 109, .3);
+  }
+  #photo-lightbox .sleep-row { margin-top: 16px; }
   label.pill { display: inline-block; }
 
   /* ---- sleep / wind-down ---- */
@@ -389,17 +404,25 @@
   </section>
 
   <section id="photo-card" class="card">
-    <div class="card-label">Today's photo</div>
-    <img id="daily-photo" alt="Today's shared photo" style="display:none">
-    <p class="photo-empty" id="photo-empty">No photo for this cycle yet.</p>
+    <div class="card-label">Today's photos</div>
+    <div id="photo-gallery"></div>
+    <p class="photo-empty" id="photo-empty">No photos for this cycle yet.</p>
     <div class="sleep-row">
-      <label class="pill" for="photo-input">add a photo</label>
-      <input id="photo-input" type="file" accept="image/*" style="display:none">
-      <button class="pill" id="photo-delete" style="display:none">delete photo</button>
+      <label class="pill" for="photo-input">add photos</label>
+      <input id="photo-input" type="file" accept="image/*" multiple style="display:none">
+      <button class="pill" id="photo-clear" style="display:none">clear all</button>
       <span class="mini-status" id="photo-status"></span>
     </div>
-    <p class="reset-note">This photo clears on its own at 8:00pm her time.</p>
+    <p class="reset-note">Tap a photo to see it big. The gallery clears on its own at 8:00pm her time.</p>
   </section>
+
+  <div id="photo-lightbox" role="dialog" aria-label="Photo viewer">
+    <img id="lightbox-img" alt="Shared photo, full size">
+    <div class="sleep-row">
+      <button class="pill" id="lightbox-delete">delete this photo</button>
+      <button class="pill" id="lightbox-close">close</button>
+    </div>
+  </div>
 
   <section id="sleep-card" class="card">
     <div class="card-label">For her sleep</div>
@@ -456,6 +479,8 @@
   var DEFAULT_TARGET = '2026-10-24T10:00:00+11:00'; // Sat 24 Oct 10:00am AEDT = Fri 23 Oct 7:00pm EDT
   var AUDIO_SYNC_LIMIT = 700000; // chars of data URL — a short voice note fits; longer stays local
   var PHOTO_SYNC_LIMIT = 850000; // compressed photo data URL kept small enough for the shared room
+  var GALLERY_PHOTO_LIMIT = 600000; // per-photo target inside the gallery (keeps a full gallery syncable)
+  var MAX_PHOTOS = 9; // gallery size per cycle
   var HEART_COLORS = {
     red: { value: '#ff4d6d', label: 'just because' },
     pink: { value: '#ff8fab', label: 'love you' },
@@ -495,7 +520,7 @@
     } catch (e) {}
     return {
       hearts: 0, stars: [], target: DEFAULT_TARGET, answers: {}, gnText: '', gnAudio: null, gnCycle: '',
-      heartColor: 'red', verse: { text: '', ref: '', cycle: '' }, photo: null, photoCycle: ''
+      heartColor: 'red', verse: { text: '', ref: '', cycle: '' }, photo: null, photos: [], photoCycle: ''
     };
   }
   function save() {
@@ -513,6 +538,15 @@
   if (typeof state.verse.ref !== 'string') state.verse.ref = '';
   if (typeof state.verse.cycle !== 'string') state.verse.cycle = '';
   if (!('photo' in state)) state.photo = null;
+  if (!Array.isArray(state.photos)) state.photos = [];
+  state.photos = state.photos.filter(function (p) { return p && typeof p.img === 'string' && typeof p.id === 'string'; });
+  // migrate the old single photo into the gallery
+  if (typeof state.photo === 'string' && state.photo) {
+    var legacyInGallery = false;
+    state.photos.forEach(function (p) { if (p.img === state.photo) legacyInGallery = true; });
+    if (!legacyInGallery) state.photos.push({ id: 'p-legacy', img: state.photo });
+    state.photo = null;
+  }
   if (typeof state.photoCycle !== 'string') state.photoCycle = '';
   if (!state.target) state.target = DEFAULT_TARGET;
 
@@ -743,14 +777,27 @@
           state.verse = next; save(); renderVerse();
         }
       });
+      roomRef.child('photos').on('value', function (snap) {
+        var v = snap.val();
+        var next = [];
+        if (v && typeof v === 'object') {
+          Object.keys(v).sort().forEach(function (k) {
+            if (typeof v[k] === 'string') next.push({ id: k, img: v[k] });
+          });
+        }
+        var cur = state.photos.map(function (p) { return p.id; }).join(',');
+        var nxt = next.map(function (p) { return p.id; }).join(',');
+        if (cur !== nxt) { state.photos = next; save(); showPhotos(); }
+      });
+      // legacy: a phone still running the old single-photo page writes 'photo' — fold it into the gallery
       roomRef.child('photo').on('value', function (snap) {
         var v = snap.val();
-        if (v === null) {
-          if (state.photo) { state.photo = null; save(); showPhoto(); }
-          return;
-        }
-        if (typeof v === 'string' && v !== state.photo) {
-          state.photo = v; save(); showPhoto();
+        if (typeof v !== 'string' || !v) return;
+        var present = false;
+        state.photos.forEach(function (p) { if (p.img === v) present = true; });
+        if (!present && state.photos.length < MAX_PHOTOS) {
+          state.photos.push({ id: 'p-legacy', img: v });
+          save(); showPhotos(); syncPhotos();
         }
       });
       roomRef.child('photoCycle').on('value', function (snap) {
@@ -1048,36 +1095,76 @@
   });
   renderVerse();
 
-  /* ---- today's photo: one compressed image per cycle ---- */
-  function showPhoto() {
-    var img = $('daily-photo');
-    if (state.photo) {
-      img.src = state.photo;
-      img.style.display = 'block';
-      $('photo-empty').style.display = 'none';
-      $('photo-delete').style.display = 'inline-block';
-    } else {
-      img.removeAttribute('src');
-      img.style.display = 'none';
-      $('photo-empty').style.display = 'block';
-      $('photo-delete').style.display = 'none';
-    }
+  /* ---- today's photos: a small gallery per cycle ---- */
+  function photosObject() {
+    if (!state.photos.length) return null;
+    var obj = {};
+    state.photos.forEach(function (p) { obj[p.id] = p.img; });
+    return obj;
   }
+  function syncPhotos() {
+    if (!roomRef) return;
+    var obj = photosObject();
+    if (obj) roomRef.child('photos').set(obj).catch(function () {});
+    else roomRef.child('photos').remove().catch(function () {});
+  }
+  var lightboxId = null;
+  function showPhotos() {
+    var grid = $('photo-gallery');
+    grid.innerHTML = '';
+    state.photos.forEach(function (p) {
+      var im = document.createElement('img');
+      im.src = p.img;
+      im.alt = 'Shared photo';
+      im.setAttribute('data-id', p.id);
+      im.addEventListener('click', function () { openPhoto(p.id); });
+      grid.appendChild(im);
+    });
+    $('photo-empty').style.display = state.photos.length ? 'none' : 'block';
+    $('photo-clear').style.display = state.photos.length ? 'inline-block' : 'none';
+    if (lightboxId && !state.photos.some(function (p) { return p.id === lightboxId; })) closePhoto();
+  }
+  function openPhoto(id) {
+    var found = null;
+    state.photos.forEach(function (p) { if (p.id === id) found = p; });
+    if (!found) return;
+    lightboxId = id;
+    $('lightbox-img').src = found.img;
+    $('photo-lightbox').classList.add('open');
+  }
+  function closePhoto() {
+    lightboxId = null;
+    $('photo-lightbox').classList.remove('open');
+    $('lightbox-img').removeAttribute('src');
+  }
+  $('lightbox-close').addEventListener('click', closePhoto);
+  $('photo-lightbox').addEventListener('click', function (e) { if (e.target === this) closePhoto(); });
+  $('lightbox-delete').addEventListener('click', function () {
+    if (!lightboxId) return;
+    state.photos = state.photos.filter(function (p) { return p.id !== lightboxId; });
+    state.photoCycle = goodnightCycleKey();
+    save(); syncPhotos(); syncSet('photoCycle', state.photoCycle);
+    closePhoto(); showPhotos();
+    $('photo-status').textContent = 'photo deleted \u2665';
+  });
   function expirePhoto(remoteAlready) {
-    var had = !!state.photo;
+    var had = state.photos.length > 0;
+    state.photos = [];
     state.photo = null;
     state.photoCycle = goodnightCycleKey();
     save();
-    showPhoto();
-    if ($('photo-status') && had) $('photo-status').textContent = 'cleared for a fresh photo \u2665';
+    closePhoto();
+    showPhotos();
+    if ($('photo-status') && had) $('photo-status').textContent = 'cleared for a fresh gallery \u2665';
     if (!remoteAlready && roomRef) {
+      roomRef.child('photos').remove().catch(function () {});
       roomRef.child('photo').remove().catch(function () {});
       roomRef.child('photoCycle').set(state.photoCycle).catch(function () {});
     }
   }
   function checkPhotoExpiry() {
     var current = goodnightCycleKey();
-    if (!state.photo) {
+    if (!state.photos.length) {
       if (state.photoCycle !== current) { state.photoCycle = current; save(); }
       return;
     }
@@ -1089,57 +1176,73 @@
     }
     if (state.photoCycle !== current) expirePhoto(false);
   }
-  $('photo-delete').addEventListener('click', function () {
+  $('photo-clear').addEventListener('click', function () {
     expirePhoto(false);
     $('photo-status').textContent = '';
   });
-  $('photo-input').addEventListener('change', function () {
-    var input = this;
-    var file = input.files && input.files[0];
-    input.value = '';
-    if (!file) return;
-    if (!file.type || file.type.indexOf('image/') !== 0) {
-      $('photo-status').textContent = 'that file is not a photo.';
-      return;
-    }
-    $('photo-status').textContent = 'preparing the photo\u2026';
+  function addPhotoFile(file, done) {
+    if (!file.type || file.type.indexOf('image/') !== 0) { done('that file is not a photo.'); return; }
     var url = URL.createObjectURL(file);
     var img = new Image();
     img.onload = function () {
       URL.revokeObjectURL(url);
-      var maxSide = 960;
+      var maxSide = 900;
       var scale = Math.min(1, maxSide / Math.max(img.naturalWidth || img.width, img.naturalHeight || img.height));
       var canvas = document.createElement('canvas');
       canvas.width = Math.max(1, Math.round((img.naturalWidth || img.width) * scale));
       canvas.height = Math.max(1, Math.round((img.naturalHeight || img.height) * scale));
       var ctx = canvas.getContext('2d');
-      if (!ctx) { $('photo-status').textContent = 'this browser could not prepare that photo.'; return; }
+      if (!ctx) { done('this browser could not prepare that photo.'); return; }
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      var quality = 0.76;
+      var quality = 0.74;
       var data = canvas.toDataURL('image/jpeg', quality);
-      while (data.length > PHOTO_SYNC_LIMIT && quality > 0.42) {
+      while (data.length > GALLERY_PHOTO_LIMIT && quality > 0.4) {
         quality -= 0.1;
         data = canvas.toDataURL('image/jpeg', quality);
       }
-      if (data.length > PHOTO_SYNC_LIMIT) {
-        $('photo-status').textContent = 'that photo is still too large to share here.';
-        return;
-      }
-      state.photo = data;
+      if (data.length > GALLERY_PHOTO_LIMIT) { done('one photo was still too large to share here.'); return; }
+      state.photos.push({ id: 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7), img: data });
       state.photoCycle = goodnightCycleKey();
       save();
-      syncSet('photo', state.photo);
+      syncPhotos();
       syncSet('photoCycle', state.photoCycle);
-      showPhoto();
-      $('photo-status').textContent = 'saved \u2665 — it clears at 8:00pm her time.';
+      showPhotos();
+      done(null);
     };
     img.onerror = function () {
       URL.revokeObjectURL(url);
-      $('photo-status').textContent = 'that photo could not be opened.';
+      done('one photo could not be opened.');
     };
     img.src = url;
+  }
+  $('photo-input').addEventListener('change', function () {
+    var input = this;
+    var files = input.files ? Array.prototype.slice.call(input.files) : [];
+    input.value = '';
+    if (!files.length) return;
+    var room = MAX_PHOTOS - state.photos.length;
+    if (room <= 0) {
+      $('photo-status').textContent = 'the gallery is full for this cycle (max ' + MAX_PHOTOS + ') \u2665';
+      return;
+    }
+    if (files.length > room) files = files.slice(0, room);
+    $('photo-status').textContent = 'preparing photos\u2026';
+    var i = 0, added = 0, lastErr = '';
+    function next() {
+      if (i >= files.length) {
+        $('photo-status').textContent = added
+          ? 'saved \u2665 — the gallery clears at 8:00pm her time.'
+          : (lastErr || 'no photos were added.');
+        return;
+      }
+      addPhotoFile(files[i++], function (err) {
+        if (err) lastErr = err; else added++;
+        next();
+      });
+    }
+    next();
   });
-  showPhoto();
+  showPhotos();
 
   /* ---- goodnight words + the sky she sleeps under ---- */
   function renderSleep() {
