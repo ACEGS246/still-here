@@ -31,8 +31,8 @@
     50% { opacity: .95; transform: scale(1.25); }
   }
   #moon {
-    position: absolute; top: 6vh; left: 50%; transform: translateX(-50%);
-    width: 190px; height: 190px; border-radius: 50%;
+    position: absolute; top: 5vh; left: 50%; transform: translateX(-50%);
+    width: 170px; height: 170px; border-radius: 50%;
     background: radial-gradient(circle at 38% 34%, #ff8f6b 0%, #e8483f 42%, #a11f2d 78%, #701523 100%);
     box-shadow: 0 0 60px 18px rgba(232, 72, 63, .35), 0 0 140px 60px rgba(161, 31, 45, .22);
     pointer-events: none;
@@ -48,15 +48,15 @@
     position: relative; z-index: 2;
     min-height: 100dvh;
     display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
-    padding: 0 26px calc(6vh + env(safe-area-inset-bottom));
+    padding: 0 26px calc(5vh + env(safe-area-inset-bottom));
     text-align: center;
   }
   h1 {
-    font-size: 2rem; font-weight: normal; font-style: italic; color: var(--amber);
-    margin-bottom: 20px; text-shadow: 0 2px 22px rgba(232, 72, 63, .45);
+    font-size: 1.9rem; font-weight: normal; font-style: italic; color: var(--amber);
+    margin-bottom: 18px; text-shadow: 0 2px 22px rgba(232, 72, 63, .45);
   }
   .line {
-    font-size: 1.13rem; line-height: 1.65; max-width: 34rem;
+    font-size: 1.1rem; line-height: 1.62; max-width: 34rem;
     opacity: 0; transform: translateY(10px);
     animation: rise 1.1s ease forwards;
     margin-bottom: 14px;
@@ -65,11 +65,11 @@
   .line .heart { color: var(--crimson); }
   @keyframes rise { to { opacity: 1; transform: translateY(0); } }
   .sign {
-    margin-top: 8px; font-style: italic; color: var(--muted); font-size: 1.05rem;
+    margin-top: 6px; font-style: italic; color: var(--muted); font-size: 1.05rem;
     opacity: 0; animation: rise 1.1s ease forwards;
   }
   .hint {
-    margin-top: 26px; font-size: .82rem; font-style: italic; color: rgba(185, 138, 151, .75);
+    margin-top: 22px; font-size: .82rem; font-style: italic; color: rgba(185, 138, 151, .75);
     opacity: 0; animation: rise 1.1s ease forwards;
   }
   .floater {
@@ -87,13 +87,12 @@
 <body>
   <div id="moon"></div>
   <main id="card">
-    <h1 class="line" style="animation-delay:.2s">Goodnight, Adri 🌙</h1>
-    <p class="line" style="animation-delay:1s">I wasn’t being mean, stubborn girl — I just love you too much to watch you run on empty.</p>
-    <p class="line" style="animation-delay:2.2s">And you never have to shut up for me. <b>Your voice is my favourite sound in the world.</b> I only want you rested, because tomorrow needs you too.</p>
-    <p class="line" style="animation-delay:3.4s">So sleep now, my moon. The stars aren’t going anywhere tonight —</p>
-    <p class="line" style="animation-delay:4.4s"><b>and neither am I.</b> <span class="heart">❤</span></p>
-    <p class="sign" style="animation-delay:5.4s">— Ethan</p>
-    <p class="hint" style="animation-delay:6.2s">(tap anywhere — the sky answers)</p>
+    <h1 class="line" style="animation-delay:.2s">Goodnight, my dear Adri 🌙</h1>
+    <p class="line" style="animation-delay:1s">You may not understand why I want you to sleep so bad, but it hurts me to see you sacrifice this much for me — especially something as sacred and as special as the sleep our bodies desperately need.</p>
+    <p class="line" style="animation-delay:2.8s">You will always be <b>my sunshine</b>. Don’t take my words too harshly — it hurts me to send them.</p>
+    <p class="line" style="animation-delay:4.4s">But watching you suffer on a lack of sleep <b>hurts me 100x more.</b> <span class="heart">❤</span></p>
+    <p class="sign" style="animation-delay:5.6s">— Ethan</p>
+    <p class="hint" style="animation-delay:6.4s">(tap anywhere — the sky answers)</p>
   </main>
 <script>
   // twinkling stars
