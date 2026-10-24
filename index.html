@@ -605,6 +605,7 @@
       return;
     }
     if (state.gnCycle !== current) expireGoodnight(false);
+    if (todayKey() !== skyDay) { skyDay = todayKey(); refreshSky(); }
   }
 
   function loadPending() {
@@ -633,11 +634,20 @@
     sky.appendChild(s);
   }
   function renderStar(st, born) {
+    if (st.day !== todayKey()) return;
     if (st.cid && renderedCids[st.cid]) return;
     if (st.cid) renderedCids[st.cid] = true;
     addStar(st.x, st.y, born, st.color);
   }
   state.stars.forEach(function (st) { renderStar(st, false); });
+  var skyDay = todayKey();
+  function refreshSky() {
+    sky.innerHTML = '';
+    renderedCids = {};
+    state.stars.forEach(function (st) { renderStar(st, false); });
+    renderCount();
+    renderSleep();
+  }
 
   function todayKey() {
     return new Date().toISOString().slice(0, 10);
@@ -1246,7 +1256,7 @@
 
   /* ---- goodnight words + the sky she sleeps under ---- */
   function renderSleep() {
-    var n = state.stars.length;
+    var n = heartsToday();
     $('stars-line').textContent = n === 0
       ? 'the sky is still empty \u2014 the first heart starts it.'
       : 'tonight the sky holds ' + n + ' star' + (n === 1 ? '' : 's') + ' between you.';
