@@ -36,6 +36,7 @@
     z-index: 0;
     overflow: hidden;
   }
+  #sky-top { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
   .star {
     position: absolute;
     color: #ffedbe;
@@ -305,7 +306,8 @@
 </head>
 <body>
 <div id="moon"></div>
-<div id="sky"></div>
+<canvas id="sky"></canvas>
+<div id="sky-top"></div>
 
 <main>
   <div>
@@ -526,6 +528,14 @@
   function save() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(state)); } catch (e) {}
   }
+  var saveTimer = null;
+  function saveSoon() {
+    if (saveTimer) return;
+    saveTimer = setTimeout(function () { saveTimer = null; save(); }, 1200);
+  }
+  window.addEventListener('pagehide', function () {
+    if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; save(); }
+  });
   var state = load();
   if (!state.answers) state.answers = {};
   if (!state.stars) state.stars = [];
@@ -555,6 +565,8 @@
   }
   state.stars.forEach(function (st) { if (!st.cid) st.cid = newCid(); });
   state.hearts = state.stars.length;
+  var knownCids = {};
+  state.stars.forEach(function (st) { if (st.cid) knownCids[st.cid] = true; });
   save();
 
   /* ---- goodnight reset: 8:00pm in Warsaw, Indiana ---- */
@@ -616,35 +628,98 @@
   }
   var pendingStars = loadPending();
 
-  /* ---- sky ---- */
+  /* ---- sky: drawn on a canvas, so EVERY star of the day shows, however many there are.
+     One canvas element replaces thousands of animated DOM stars (which froze phones
+     once a day's hearts ran into the hundreds/thousands). Sizes and twinkle phases
+     are derived from each star's cid, so the sky looks the same on every redraw. ---- */
   var sky = $('sky');
-  var renderedCids = {};
+  var skyTop = $('sky-top');
+  var skyCtx = sky.getContext('2d');
   function heartColourValue(key) {
     return HEART_COLORS[key] ? HEART_COLORS[key].value : HEART_COLORS.red.value;
   }
-  function addStar(x, y, born, colorKey) {
+  function starSeed(cid) {
+    var h = 2166136261;
+    cid = cid || 'x';
+    for (var i = 0; i < cid.length; i++) { h ^= cid.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0) / 4294967295;
+  }
+  var spriteCache = {};
+  function starSprite(colorKey) {
+    var col = heartColourValue(colorKey);
+    if (spriteCache[col]) return spriteCache[col];
+    var c = document.createElement('canvas');
+    c.width = 48; c.height = 48;
+    var g = c.getContext('2d');
+    var grad = g.createRadialGradient(24, 24, 0, 24, 24, 24);
+    grad.addColorStop(0, '#ffffff');
+    grad.addColorStop(0.22, col);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = grad;
+    g.fillRect(0, 0, 48, 48);
+    g.fillStyle = '#ffffff';
+    g.beginPath(); g.arc(24, 24, 3, 0, Math.PI * 2); g.fill();
+    spriteCache[col] = c;
+    return c;
+  }
+  function sizeSky() {
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    sky.width = Math.round(window.innerWidth * dpr);
+    sky.height = Math.round(window.innerHeight * dpr);
+  }
+  sizeSky();
+  function drawSky() {
+    if (!sky.width) sizeSky();
+    var w = sky.width, h = sky.height;
+    var scale = w / Math.max(window.innerWidth, 1);
+    skyCtx.clearRect(0, 0, w, h);
+    var tk = todayKey();
+    var now = Date.now();
+    for (var i = 0; i < state.stars.length; i++) {
+      var st = state.stars[i];
+      if (st.day !== tk) continue;
+      var seed = starSeed(st.cid);
+      var size = (11 + seed * 15) * scale;
+      var tw = 0.5 + 0.5 * Math.sin(now / 1500 + seed * 12.566);
+      skyCtx.globalAlpha = 0.55 + 0.45 * tw;
+      skyCtx.drawImage(starSprite(st.color), st.x / 100 * w - size / 2, st.y / 100 * h - size / 2, size, size);
+    }
+    skyCtx.globalAlpha = 1;
+  }
+  var drawQueued = false;
+  function scheduleDraw() {
+    if (drawQueued) return;
+    drawQueued = true;
+    requestAnimationFrame(function () { drawQueued = false; drawSky(); });
+  }
+  setInterval(function () { if (!document.hidden) drawSky(); }, 1500);
+  window.addEventListener('resize', function () { sizeSky(); drawSky(); });
+  function bornFlash(st) {
     var s = document.createElement('div');
-    s.className = 'star' + (born ? ' born' : '');
+    s.className = 'star born';
     s.textContent = '\u2726';
-    s.style.left = x + '%';
-    s.style.top = y + '%';
-    s.style.color = colorKey ? heartColourValue(colorKey) : '#ffd9e0';
-    s.style.fontSize = (9 + Math.random() * 9).toFixed(0) + 'px';
-    s.style.animationDelay = (Math.random() * 3).toFixed(1) + 's';
-    sky.appendChild(s);
+    s.style.left = st.x + '%';
+    s.style.top = st.y + '%';
+    s.style.color = heartColourValue(st.color);
+    s.style.fontSize = '20px';
+    skyTop.appendChild(s);
+    setTimeout(function () { s.remove(); }, 2400);
   }
   function renderStar(st, born) {
     if (st.day !== todayKey()) return;
-    if (st.cid && renderedCids[st.cid]) return;
-    if (st.cid) renderedCids[st.cid] = true;
-    addStar(st.x, st.y, born, st.color);
+    scheduleDraw();
+    if (born) bornFlash(st);
   }
-  state.stars.forEach(function (st) { renderStar(st, false); });
+  var countsTimer = null;
+  function renderCountsSoon() {
+    if (countsTimer) return;
+    countsTimer = setTimeout(function () { countsTimer = null; renderCount(); renderSleep(); }, 400);
+  }
+  drawSky();
   var skyDay = todayKey();
   function refreshSky() {
-    sky.innerHTML = '';
-    renderedCids = {};
-    state.stars.forEach(function (st) { renderStar(st, false); });
+    skyTop.innerHTML = '';
+    drawSky();
     renderCount();
     renderSleep();
   }
@@ -717,15 +792,13 @@
       starsRef.on('child_added', function (snap) {
         var st = snap.val();
         if (!st || !st.cid) return;
-        var known = false;
-        state.stars.forEach(function (s) { if (s.cid === st.cid) known = true; });
-        if (!known) {
+        if (!knownCids[st.cid]) {
+          knownCids[st.cid] = true;
           state.stars.push(st);
           state.hearts = state.stars.length;
-          save();
+          saveSoon();
           renderStar(st, (Date.now() - (st.ts || 0)) < 10000);
-          renderCount();
-          renderSleep();
+          renderCountsSoon();
         }
         // our own star confirmed — drop it from the pending queue
         var pi = pendingStars.indexOf(st.cid);
@@ -878,8 +951,9 @@
       h.remove();
       var star = { x: lx, y: dy, day: todayKey(), cid: newCid(), ts: Date.now(), color: chosenColor };
       state.stars.push(star);
+      knownCids[star.cid] = true;
       state.hearts = state.stars.length;
-      save();
+      saveSoon();
       renderStar(star, true);
       renderCount();
       renderSleep();
