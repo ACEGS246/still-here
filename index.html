@@ -1459,16 +1459,16 @@
     { m: 4, d: 25, name: 'ANZAC Day', region: 'NSW' },
     { m: 12, d: 25, name: 'Christmas Day', region: 'NSW' },
     { m: 12, d: 26, name: 'Boxing Day', region: 'NSW' },
-    // Poland — Warsaw
-    { m: 1, d: 1, name: "New Year's Day", region: 'Poland' },
-    { m: 1, d: 6, name: 'Epiphany', region: 'Poland' },
-    { m: 5, d: 1, name: 'Labour Day', region: 'Poland' },
-    { m: 5, d: 3, name: 'Constitution Day', region: 'Poland' },
-    { m: 8, d: 15, name: 'Assumption Day', region: 'Poland' },
-    { m: 11, d: 1, name: "All Saints' Day", region: 'Poland' },
-    { m: 11, d: 11, name: 'Independence Day', region: 'Poland' },
-    { m: 12, d: 25, name: 'Christmas Day', region: 'Poland' },
-    { m: 12, d: 26, name: "St Stephen's Day", region: 'Poland' }
+    // Warsaw — Warsaw
+    { m: 1, d: 1, name: "New Year's Day", region: 'Warsaw' },
+    { m: 1, d: 6, name: 'Epiphany', region: 'Warsaw' },
+    { m: 5, d: 1, name: 'Labour Day', region: 'Warsaw' },
+    { m: 5, d: 3, name: 'Constitution Day', region: 'Warsaw' },
+    { m: 8, d: 15, name: 'Assumption Day', region: 'Warsaw' },
+    { m: 11, d: 1, name: "All Saints' Day", region: 'Warsaw' },
+    { m: 11, d: 11, name: 'Independence Day', region: 'Warsaw' },
+    { m: 12, d: 25, name: 'Christmas Day', region: 'Warsaw' },
+    { m: 12, d: 26, name: "St Stephen's Day", region: 'Warsaw' }
   ];
   var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
   var MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -1498,8 +1498,8 @@
     function pushRule(date, name, region) { list.push({ m: date.getMonth() + 1, d: date.getDate(), name: name, region: region }); }
     pushRule(addDays(easter, -2), 'Good Friday', 'NSW');
     pushRule(addDays(easter, 1), 'Easter Monday', 'NSW');
-    pushRule(addDays(easter, 1), 'Easter Monday', 'Poland');
-    pushRule(addDays(easter, 60), 'Corpus Christi', 'Poland');
+    pushRule(addDays(easter, 1), 'Easter Monday', 'Warsaw');
+    pushRule(addDays(easter, 60), 'Corpus Christi', 'Warsaw');
     pushRule(nthWeekday(year, 5, 1, 2), "King's Birthday", 'NSW'); // second Monday of June
     pushRule(nthWeekday(year, 9, 1, 1), 'Labour Day', 'NSW'); // first Monday of October
     return list;
