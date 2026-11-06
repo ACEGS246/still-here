@@ -285,6 +285,38 @@
   #photo-lightbox .sleep-row { margin-top: 16px; }
   label.pill { display: inline-block; }
 
+
+  /* ---- us / plans / things / moments / bucket ---- */
+  input[type="date"] {
+    width: 100%; background: rgba(5, 12, 11, .55); border: 1px solid rgba(255, 183, 3, .18);
+    border-radius: 10px; color: var(--amber); font-family: inherit; font-size: .95rem;
+    padding: 10px 12px; color-scheme: dark;
+  }
+  input[type="date"]:focus { outline: none; border-color: var(--crimson); }
+  .add-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+  .add-row input { flex: 1; min-width: 0; margin-top: 0; }
+  .add-row .pill { flex: none; }
+  .us-row { background: rgba(10, 4, 5, .5); border-radius: 12px; padding: 12px; margin-top: 10px; }
+  .us-row .who { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin-bottom: 6px; }
+  .us-status { font-size: 1.02rem; color: var(--amber); white-space: pre-wrap; }
+  .us-status.empty { color: var(--soft); font-style: italic; }
+  .updated-note { color: var(--soft); font-size: .78rem; font-style: italic; margin-top: 4px; min-height: 1em; }
+  .list-item { display: flex; gap: 10px; align-items: flex-start; background: rgba(10, 4, 5, .5); border-radius: 12px; padding: 10px 12px; margin-top: 8px; }
+  .list-item .grow { flex: 1; min-width: 0; }
+  .list-item.dim { opacity: .55; }
+  .item-title { color: var(--amber); font-size: 1rem; white-space: pre-wrap; }
+  .item-note { color: var(--muted); font-size: .9rem; margin-top: 2px; white-space: pre-wrap; }
+  .item-date { color: var(--soft); font-size: .8rem; margin-top: 2px; }
+  .chip { flex: none; border: 1px solid rgba(255, 183, 3, .35); color: #ffd166; border-radius: 999px; padding: 3px 10px; font-size: .78rem; font-style: italic; margin-top: 2px; }
+  .chip.past { border-color: rgba(255, 255, 255, .12); color: var(--soft); }
+  .del-btn { flex: none; background: none; border: none; color: var(--soft); font-family: inherit; font-size: 1rem; line-height: 1; cursor: pointer; padding: 2px 4px; }
+  .del-btn:hover { color: var(--crimson); }
+  .tick-btn { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--soft); background: none; color: #ffd166; cursor: pointer; font-size: .85rem; line-height: 1; padding: 0; margin-top: 1px; }
+  .tick-btn.done { border-color: var(--crimson); background: rgba(255, 194, 75, .15); }
+  .done-text { text-decoration: line-through; color: var(--muted); }
+  .moment-date { color: var(--soft); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; margin-top: 14px; }
+  .empty-note { color: var(--muted); font-style: italic; text-align: center; font-size: .95rem; margin-top: 8px; }
+
   /* ---- sleep / wind-down ---- */
   #stars-line { text-align: center; color: var(--muted); font-style: italic; font-size: .95rem; margin-bottom: 12px; }
   .gn-line { text-align: center; font-size: 1.2rem; font-style: italic; color: var(--amber); margin: 8px 0 14px; }
@@ -311,7 +343,7 @@
 
 <main>
   <div>
-    <h1>Still Here <span class="heart-dot">♥</span></h1>
+    <h1>Still Here <span class="heart-dot">★</span></h1>
     <p class="tagline">presence, without pressure</p>
     <p id="sync-line"><span class="dot">○</span> <span id="sync-text">this device only — for now</span></p>
   </div>
@@ -333,17 +365,17 @@
   </section>
 
   <section id="heart-zone" class="dim">
-    <p class="palette-label">Choose what this heart says</p>
-    <div id="heart-palette" aria-label="Heart colours">
-      <button class="heart-choice" data-color="red" style="--choice:#ff4d6d" aria-label="Red heart, just because">&#10084;<span>just because</span></button>
-      <button class="heart-choice" data-color="pink" style="--choice:#ff8fab" aria-label="Pink heart, thinking of you">&#10084;<span>thinking of you</span></button>
-      <button class="heart-choice" data-color="gold" style="--choice:#ffd166" aria-label="Gold heart, proud of you">&#10084;<span>proud of you</span></button>
-      <button class="heart-choice" data-color="purple" style="--choice:#c77dff" aria-label="Purple heart, miss you">&#10084;<span>miss you</span></button>
-      <button class="heart-choice" data-color="blue" style="--choice:#8ecae6" aria-label="Blue heart, sleep well">&#10084;<span>sleep well</span></button>
+    <p class="palette-label">Choose what this star says</p>
+    <div id="heart-palette" aria-label="Star colours">
+      <button class="heart-choice" data-color="red" style="--choice:#ff4d6d" aria-label="Red star, just because">&#9733;<span>just because</span></button>
+      <button class="heart-choice" data-color="pink" style="--choice:#ff8fab" aria-label="Pink star, thinking of you">&#9733;<span>thinking of you</span></button>
+      <button class="heart-choice" data-color="gold" style="--choice:#ffd166" aria-label="Gold star, proud of you">&#9733;<span>proud of you</span></button>
+      <button class="heart-choice" data-color="purple" style="--choice:#c77dff" aria-label="Purple star, miss you">&#9733;<span>miss you</span></button>
+      <button class="heart-choice" data-color="blue" style="--choice:#8ecae6" aria-label="Blue star, sleep well">&#9733;<span>sleep well</span></button>
     </div>
-    <button id="big-heart" aria-label="Send a heart">
+    <button id="big-heart" aria-label="Send a star">
       <svg viewBox="0 0 24 24" fill="#ff4d6d" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
       </svg>
     </button>
     <p id="heart-meaning"></p>
@@ -354,7 +386,7 @@
   <section id="question-card" class="card dim">
     <div class="card-label">Today's question</div>
     <p id="q-text"></p>
-    <div id="reveal-banner" style="display:none">both answers are in — they open together &hearts;</div>
+    <div id="reveal-banner" style="display:none">both answers are in — they open together &#9733;</div>
 
     <div id="his-zone">
       <span class="ans-label">Ethan's answer</span>
@@ -370,7 +402,7 @@
 
     <div id="hers-zone">
       <span class="ans-label">Adwi's answer</span>
-      <p class="sealed-note" id="hers-locked">sealed until she answers &hearts; — her words unlock once his are sealed. No peeking; that's the deal.</p>
+      <p class="sealed-note" id="hers-locked">sealed until she answers &#9733; — her words unlock once his are sealed. No peeking; that's the deal.</p>
       <div id="hers-edit" style="display:none">
         <textarea id="ans-hers" rows="3" placeholder="her words go here — typed, in her own time"></textarea>
         <div class="seal-row"><button class="pill" id="save-hers">seal her answer</button></div>
@@ -403,6 +435,71 @@
     <div class="window" id="window-desc">Saturday 10:00am your time &middot; Friday 7:00pm hers</div>
     <div id="countdown">--:--:--:--</div>
     <button id="change-date">set a new date</button>
+  </section>
+
+  <section id="us-card" class="card">
+    <div class="card-label">Us today</div>
+    <div class="us-row">
+      <div class="who">Ethan</div>
+      <p class="us-status" id="us-status-his"></p>
+      <p class="updated-note" id="us-updated-his"></p>
+      <div class="add-row">
+        <input type="text" id="us-input-his" placeholder="what Ethan is up to" maxlength="140">
+        <button class="pill" id="us-save-his">save</button>
+      </div>
+    </div>
+    <div class="us-row">
+      <div class="who">Adwi</div>
+      <p class="us-status" id="us-status-hers"></p>
+      <p class="updated-note" id="us-updated-hers"></p>
+      <div class="add-row">
+        <input type="text" id="us-input-hers" placeholder="what Adwi is up to" maxlength="140">
+        <button class="pill" id="us-save-hers">save</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="plans-card" class="card">
+    <div class="card-label">Plans</div>
+    <div id="plans-list"></div>
+    <p class="empty-note" id="plans-empty">Nothing planned yet — the next good thing goes here.</p>
+    <input type="text" id="plan-title" placeholder="what are we doing?" maxlength="120">
+    <div class="add-row">
+      <input type="date" id="plan-date" aria-label="Plan date">
+      <button class="pill" id="plan-add">add plan</button>
+    </div>
+    <input type="text" id="plan-note" placeholder="note (optional)" maxlength="200">
+  </section>
+
+  <section id="things-card" class="card">
+    <div class="card-label">Our things</div>
+    <div id="things-list"></div>
+    <p class="empty-note" id="things-empty">Nothing here yet — a film, a game, something for a rainy day.</p>
+    <div class="add-row">
+      <input type="text" id="thing-input" placeholder="something to watch, play or do together" maxlength="160">
+      <button class="pill" id="thing-add">add</button>
+    </div>
+  </section>
+
+  <section id="moments-card" class="card">
+    <div class="card-label">Moments</div>
+    <div id="moments-list"></div>
+    <p class="empty-note" id="moments-empty">No moments saved yet.</p>
+    <input type="text" id="moment-text" placeholder="a moment worth keeping" maxlength="240">
+    <div class="add-row">
+      <input type="date" id="moment-date" aria-label="Moment date">
+      <button class="pill" id="moment-add">add moment</button>
+    </div>
+  </section>
+
+  <section id="bucket-card" class="card">
+    <div class="card-label">Bucket list</div>
+    <div id="bucket-list"></div>
+    <p class="empty-note" id="bucket-empty">The list is empty — dream big, add one.</p>
+    <div class="add-row">
+      <input type="text" id="bucket-input" placeholder="one day we will…" maxlength="160">
+      <button class="pill" id="bucket-add">add</button>
+    </div>
   </section>
 
   <section id="photo-card" class="card">
@@ -449,7 +546,7 @@
   </section>
 
   <footer>
-    every heart lands in the same sky. no reply owed, ever.
+    every star lands in the same sky. no reply owed, ever.
     <br><button class="pill" id="copy-link">copy our link</button>
   </footer>
 </main>
@@ -522,7 +619,8 @@
     } catch (e) {}
     return {
       hearts: 0, stars: [], target: DEFAULT_TARGET, answers: {}, gnText: '', gnAudio: null, gnCycle: '',
-      heartColor: 'red', verse: { text: '', ref: '', cycle: '' }, photo: null, photos: [], photoCycle: ''
+      heartColor: 'red', verse: { text: '', ref: '', cycle: '' }, photo: null, photos: [], photoCycle: '',
+      usboard: { his: { text: '', ts: 0 }, hers: { text: '', ts: 0 } }, plans: [], things: [], moments: [], bucket: []
     };
   }
   function save() {
@@ -558,6 +656,35 @@
     state.photo = null;
   }
   if (typeof state.photoCycle !== 'string') state.photoCycle = '';
+  if (!state.usboard || typeof state.usboard !== 'object') state.usboard = { his: { text: '', ts: 0 }, hers: { text: '', ts: 0 } };
+  ['his', 'hers'].forEach(function (k) {
+    if (!state.usboard[k] || typeof state.usboard[k] !== 'object') state.usboard[k] = { text: '', ts: 0 };
+    if (typeof state.usboard[k].text !== 'string') state.usboard[k].text = '';
+    if (typeof state.usboard[k].ts !== 'number') state.usboard[k].ts = 0;
+  });
+  if (!Array.isArray(state.plans)) state.plans = [];
+  state.plans = state.plans.filter(function (p) {
+    return p && typeof p.id === 'string' && typeof p.title === 'string' && typeof p.date === 'string';
+  });
+  state.plans.forEach(function (p) {
+    if (typeof p.note !== 'string') p.note = '';
+    if (typeof p.ts !== 'number') p.ts = 0;
+  });
+  if (!Array.isArray(state.things)) state.things = [];
+  state.things = state.things.filter(function (p) { return p && typeof p.id === 'string' && typeof p.text === 'string'; });
+  state.things.forEach(function (p) { if (typeof p.ts !== 'number') p.ts = 0; });
+  if (!Array.isArray(state.moments)) state.moments = [];
+  state.moments = state.moments.filter(function (p) {
+    return p && typeof p.id === 'string' && typeof p.text === 'string' && typeof p.date === 'string';
+  });
+  state.moments.forEach(function (p) { if (typeof p.ts !== 'number') p.ts = 0; });
+  if (!Array.isArray(state.bucket)) state.bucket = [];
+  state.bucket = state.bucket.filter(function (p) { return p && typeof p.id === 'string' && typeof p.text === 'string'; });
+  state.bucket.forEach(function (p) {
+    if (typeof p.done !== 'boolean') p.done = false;
+    if (typeof p.doneAt !== 'string') p.doneAt = '';
+    if (typeof p.ts !== 'number') p.ts = 0;
+  });
   if (!state.target) state.target = DEFAULT_TARGET;
 
   function newCid() {
@@ -601,7 +728,7 @@
     renderSleep();
     showAudio();
     if ($('gn-text')) $('gn-text').value = '';
-    if ($('rec-status') && hadContent) $('rec-status').textContent = 'cleared for a fresh goodnight \u2665';
+    if ($('rec-status') && hadContent) $('rec-status').textContent = 'cleared for a fresh goodnight \u2605';
     if (!remoteAlready && roomRef) {
       roomRef.child('gnText').set('').catch(function () {});
       roomRef.child('gnAudio').remove().catch(function () {});
@@ -764,11 +891,11 @@
     var t = heartsToday();
     var total = state.stars.length;
     if (total === 0) {
-      el.textContent = 'the sky is empty. the first heart starts it.';
+      el.textContent = 'the sky is empty. the first star starts it.';
       totalEl.textContent = '';
       return;
     }
-    el.innerHTML = '<b>' + t + '</b> heart' + (t === 1 ? '' : 's') + ' in the sky today.';
+    el.innerHTML = '<b>' + t + '</b> star' + (t === 1 ? '' : 's') + ' in the sky today.';
     totalEl.innerHTML = '<b>' + total + '</b> all time';
   }
   renderCount();
@@ -918,10 +1045,42 @@
           save();
         }
       });
+      roomRef.child('usboard').on('value', function (snap) {
+        var v = snap.val();
+        if (!v || typeof v !== 'object') {
+          // first contact with an empty room: share what this phone already has
+          if (!usboardPrimed) {
+            usboardPrimed = true;
+            if (state.usboard.his.text || state.usboard.hers.text) {
+              syncSet('usboard/his', state.usboard.his);
+              syncSet('usboard/hers', state.usboard.hers);
+            }
+          }
+          return;
+        }
+        usboardPrimed = true;
+        var changed = false;
+        ['his', 'hers'].forEach(function (k) {
+          var it = v[k];
+          var next = {
+            text: it && typeof it.text === 'string' ? it.text : '',
+            ts: it && typeof it.ts === 'number' ? it.ts : 0
+          };
+          if (next.text !== state.usboard[k].text || next.ts !== state.usboard[k].ts) {
+            state.usboard[k] = next;
+            changed = true;
+          }
+        });
+        if (changed) { save(); renderUs(); }
+      });
+      attachList('plans', 'plans', renderPlans);
+      attachList('things', 'things', renderThings);
+      attachList('moments', 'moments', renderMoments);
+      attachList('bucket', 'bucket', renderBucket);
       runDailyResetChecks();
       db.ref('.info/connected').on('value', function (snap) {
         if (snap.val() === true) { setSync('live', 'one sky, two phones — live'); flushPending(); }
-        else setSync('connecting', 'reconnecting\u2026 hearts are kept safe on this phone');
+        else setSync('connecting', 'reconnecting\u2026 stars are kept safe on this phone');
       });
     }).catch(function () {
       setSync('local', 'sync sign-in failed — this device only');
@@ -940,7 +1099,7 @@
     if (path) path.setAttribute('fill', info.value);
     var svg = $('big-heart').querySelector('svg');
     if (svg) svg.style.filter = 'drop-shadow(0 0 22px ' + info.value + ')';
-    $('heart-meaning').textContent = 'this heart says: ' + info.label;
+    $('heart-meaning').textContent = 'this star says: ' + info.label;
   }
   document.querySelectorAll('.heart-choice').forEach(function (btn) {
     btn.addEventListener('click', function () {
@@ -961,7 +1120,7 @@
     var chosenColor = state.heartColor || 'red';
     var h = document.createElement('div');
     h.className = 'fly-heart';
-    h.textContent = '\u2665';
+    h.textContent = '\u2605';
     h.style.left = (sx - 15) + 'px';
     h.style.top = (sy - 15) + 'px';
     h.style.color = heartColourValue(chosenColor);
@@ -1045,7 +1204,7 @@
   function tickCountdown() {
     var diff = targetDate().getTime() - Date.now();
     var el = $('countdown');
-    if (diff <= 0) { el.innerHTML = 'it\u2019s time <small>\u2665</small>'; return; }
+    if (diff <= 0) { el.innerHTML = 'it\u2019s time <small>\u2605</small>'; return; }
     var s = Math.floor(diff / 1000);
     var d = Math.floor(s / 86400); s -= d * 86400;
     var h = Math.floor(s / 3600); s -= h * 3600;
@@ -1110,7 +1269,7 @@
     if (a.hisSealed) {
       $('his-edit').style.display = 'none';
       $('his-sealed').style.display = 'block';
-      $('his-quote').textContent = both ? a.his : 'sealed \u2665 \u2014 hidden until both answers are in';
+      $('his-quote').textContent = both ? a.his : 'sealed \u2605 \u2014 hidden until both answers are in';
     } else {
       $('his-edit').style.display = 'block';
       $('his-sealed').style.display = 'none';
@@ -1120,7 +1279,7 @@
       $('hers-locked').style.display = 'none';
       $('hers-edit').style.display = 'none';
       $('hers-sealed').style.display = 'block';
-      $('hers-quote').textContent = both ? a.hers : 'sealed \u2665 \u2014 hidden until both answers are in';
+      $('hers-quote').textContent = both ? a.hers : 'sealed \u2605 \u2014 hidden until both answers are in';
     } else if (a.hisSealed) {
       $('hers-locked').style.display = 'none';
       $('hers-edit').style.display = 'block';
@@ -1172,7 +1331,7 @@
     state.verse = { text: '', ref: '', cycle: goodnightCycleKey() };
     save();
     renderVerse();
-    if ($('verse-status') && had) $('verse-status').textContent = 'cleared for a fresh verse \u2665';
+    if ($('verse-status') && had) $('verse-status').textContent = 'cleared for a fresh verse \u2605';
     if (!remoteAlready && roomRef) {
       roomRef.child('verse').set(state.verse).catch(function () {});
     }
@@ -1199,7 +1358,7 @@
     syncSet('verse', state.verse);
     renderVerse();
     $('verse-status').textContent = state.verse.text || state.verse.ref
-      ? 'saved \u2665 — only this verse is kept, and it clears at 8:00pm her time.'
+      ? 'saved \u2605 — only this verse is kept, and it clears at 8:00pm her time.'
       : '';
   });
   $('verse-clear').addEventListener('click', function () {
@@ -1258,7 +1417,7 @@
     state.photoCycle = goodnightCycleKey();
     save(); syncPhotos(); syncSet('photoCycle', state.photoCycle);
     closePhoto(); showPhotos();
-    $('photo-status').textContent = 'photo deleted \u2665';
+    $('photo-status').textContent = 'photo deleted \u2605';
   });
   function expirePhoto(remoteAlready) {
     var had = state.photos.length > 0;
@@ -1268,7 +1427,7 @@
     save();
     closePhoto();
     showPhotos();
-    if ($('photo-status') && had) $('photo-status').textContent = 'cleared for a fresh gallery \u2665';
+    if ($('photo-status') && had) $('photo-status').textContent = 'cleared for a fresh gallery \u2605';
     if (!remoteAlready && roomRef) {
       roomRef.child('photos').remove().catch(function () {});
       roomRef.child('photo').remove().catch(function () {});
@@ -1335,7 +1494,7 @@
     if (!files.length) return;
     var room = MAX_PHOTOS - state.photos.length;
     if (room <= 0) {
-      $('photo-status').textContent = 'the gallery is full for this cycle (max ' + MAX_PHOTOS + ') \u2665';
+      $('photo-status').textContent = 'the gallery is full for this cycle (max ' + MAX_PHOTOS + ') \u2605';
       return;
     }
     if (files.length > room) files = files.slice(0, room);
@@ -1344,7 +1503,7 @@
     function next() {
       if (i >= files.length) {
         $('photo-status').textContent = added
-          ? 'saved \u2665 — the gallery clears at 8:00pm her time.'
+          ? 'saved \u2605 — the gallery clears at 8:00pm her time.'
           : (lastErr || 'no photos were added.');
         return;
       }
@@ -1361,7 +1520,7 @@
   function renderSleep() {
     var n = heartsToday();
     $('stars-line').textContent = n === 0
-      ? 'the sky is still empty \u2014 the first heart starts it.'
+      ? 'the sky is still empty \u2014 the first star starts it.'
       : 'tonight the sky holds ' + n + ' star' + (n === 1 ? '' : 's') + ' between you.';
   }
   if (state.gnText) $('gn-text').value = state.gnText;
@@ -1369,7 +1528,7 @@
     state.gnText = $('gn-text').value.trim();
     stampGoodnightCycle();
     save(); syncSet('gnText', state.gnText); syncSet('gnCycle', state.gnCycle); renderSleep();
-    $('rec-status').textContent = state.gnText ? 'saved \u2665' : '';
+    $('rec-status').textContent = state.gnText ? 'saved \u2605' : '';
   });
   renderSleep();
   setInterval(renderSleep, 5000);
@@ -1424,11 +1583,11 @@
             if (syncLive && state.gnAudio.length < AUDIO_SYNC_LIMIT) {
               syncSet('gnAudio', state.gnAudio);
               syncSet('gnCycle', state.gnCycle);
-              $('rec-status').textContent = 'saved \u2665 \u2014 they can play it whenever they need it.';
+              $('rec-status').textContent = 'saved \u2605 \u2014 they can play it whenever they need it.';
             } else if (syncLive) {
-              $('rec-status').textContent = 'saved on this phone \u2665 \u2014 that take was long, so it lives here rather than in the shared sky. A shorter one, under a minute, syncs.';
+              $('rec-status').textContent = 'saved on this phone \u2605 \u2014 that take was long, so it lives here rather than in the shared sky. A shorter one, under a minute, syncs.';
             } else {
-              $('rec-status').textContent = 'saved \u2665 \u2014 they can play it whenever they need it.';
+              $('rec-status').textContent = 'saved \u2605 \u2014 they can play it whenever they need it.';
             }
           } catch (err) {
             state.gnAudio = null; save();
@@ -1462,12 +1621,315 @@
   tickWindHint();
   setInterval(tickWindHint, 30000);
 
+  /* ---- us today: one short status line each, either phone can set either ---- */
+  function timeAgo(ts) {
+    if (!ts) return '';
+    var s = Math.floor((Date.now() - ts) / 1000);
+    if (s < 45) return 'just now';
+    var m = Math.floor(s / 60);
+    if (m < 60) return m + ' min ago';
+    var h = Math.floor(m / 60);
+    if (h < 24) return h + (h === 1 ? ' hour ago' : ' hours ago');
+    var d = Math.floor(h / 24);
+    return d + (d === 1 ? ' day ago' : ' days ago');
+  }
+  function renderUsSide(key, statusId, updatedId) {
+    var it = state.usboard[key];
+    var st = $(statusId);
+    st.textContent = it.text || 'nothing here yet';
+    st.classList.toggle('empty', !it.text);
+    $(updatedId).textContent = it.ts ? 'updated ' + timeAgo(it.ts) : '';
+  }
+  function renderUs() {
+    renderUsSide('his', 'us-status-his', 'us-updated-his');
+    renderUsSide('hers', 'us-status-hers', 'us-updated-hers');
+  }
+  function saveUs(key, inputId) {
+    var v = $(inputId).value.trim();
+    if (!v) return;
+    state.usboard[key] = { text: v, ts: Date.now() };
+    save();
+    syncSet('usboard/' + key, state.usboard[key]);
+    renderUs();
+    $(inputId).value = '';
+  }
+  $('us-save-his').addEventListener('click', function () { saveUs('his', 'us-input-his'); });
+  $('us-save-hers').addEventListener('click', function () { saveUs('hers', 'us-input-hers'); });
+  $('us-input-his').addEventListener('keydown', function (e) { if (e.key === 'Enter') saveUs('his', 'us-input-his'); });
+  $('us-input-hers').addEventListener('keydown', function (e) { if (e.key === 'Enter') saveUs('hers', 'us-input-hers'); });
+  renderUs();
+
+  /* ---- shared lists (plans / things / moments / bucket): one pattern, four cards.
+     Items live in local state (so the page works fully offline / local-only) and,
+     when a room is live, as children of rooms/<room>/<name>/<id> — set() to write,
+     remove() to delete, one on('value') listener per list to re-render. ---- */
+  var usboardPrimed = false;
+  var listPrimed = {};
+  function syncChild(name, id, value) {
+    if (!roomRef) return;
+    roomRef.child(name).child(id).set(value).catch(function () {});
+  }
+  function removeChild(name, id) {
+    if (!roomRef) return;
+    roomRef.child(name).child(id).remove().catch(function () {});
+  }
+  function attachList(name, key, render) {
+    roomRef.child(name).on('value', function (snap) {
+      var v = snap.val();
+      var next = [];
+      if (v && typeof v === 'object') {
+        Object.keys(v).forEach(function (k) {
+          var it = v[k];
+          if (it && typeof it === 'object') {
+            var copy = {};
+            for (var f in it) copy[f] = it[f];
+            copy.id = k;
+            next.push(copy);
+          }
+        });
+      }
+      if (!listPrimed[name]) {
+        listPrimed[name] = true;
+        // first contact with an empty room: share what this phone already has
+        if (!next.length && state[key].length) {
+          state[key].forEach(function (it) { syncChild(name, it.id, it); });
+          return;
+        }
+      }
+      var sig = function (list) {
+        return list.map(function (i) { return JSON.stringify(i); }).sort().join('|');
+      };
+      if (sig(next) !== sig(state[key])) { state[key] = next; save(); render(); }
+    });
+  }
+  function addItem(name, key, item, render) {
+    state[key].push(item);
+    save();
+    syncChild(name, item.id, item);
+    render();
+  }
+  function deleteItem(name, key, id, render) {
+    state[key] = state[key].filter(function (i) { return i.id !== id; });
+    save();
+    removeChild(name, id);
+    render();
+  }
+  function newItemId(prefix) {
+    return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+  function delBtn(label, onClick) {
+    var b = document.createElement('button');
+    b.className = 'del-btn';
+    b.textContent = '\u00D7';
+    b.setAttribute('aria-label', label);
+    b.addEventListener('click', onClick);
+    return b;
+  }
+  function fmtDate(ymd) {
+    var d = new Date(ymd + 'T00:00:00');
+    if (isNaN(d.getTime())) return ymd;
+    return new Intl.DateTimeFormat('en-AU', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' }).format(d);
+  }
+  function todayYmd() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  /* ---- plans ---- */
+  function planChip(ymd) {
+    var a = new Date(); a.setHours(0, 0, 0, 0);
+    var b = new Date(ymd + 'T00:00:00');
+    var d = isNaN(b.getTime()) ? 0 : Math.round((b - a) / 86400000);
+    if (d === 0) return { text: 'today', past: false };
+    if (d === 1) return { text: 'tomorrow', past: false };
+    if (d > 1) return { text: 'in ' + d + ' days', past: false };
+    if (d === -1) return { text: '1 day ago', past: true };
+    return { text: (-d) + ' days ago', past: true };
+  }
+  function renderPlans() {
+    var list = $('plans-list');
+    list.innerHTML = '';
+    var items = state.plans.slice().sort(function (a, b) {
+      if (a.date !== b.date) return a.date < b.date ? -1 : 1;
+      return (a.ts || 0) - (b.ts || 0);
+    });
+    $('plans-empty').style.display = items.length ? 'none' : 'block';
+    items.forEach(function (it) {
+      var chip = planChip(it.date);
+      var row = document.createElement('div');
+      row.className = 'list-item' + (chip.past ? ' dim' : '');
+      var grow = document.createElement('div');
+      grow.className = 'grow';
+      var t = document.createElement('div');
+      t.className = 'item-title';
+      t.textContent = it.title;
+      var d = document.createElement('div');
+      d.className = 'item-date';
+      d.textContent = fmtDate(it.date);
+      grow.appendChild(t);
+      grow.appendChild(d);
+      if (it.note) {
+        var n = document.createElement('div');
+        n.className = 'item-note';
+        n.textContent = it.note;
+        grow.appendChild(n);
+      }
+      var c = document.createElement('span');
+      c.className = 'chip' + (chip.past ? ' past' : '');
+      c.textContent = chip.text;
+      row.appendChild(grow);
+      row.appendChild(c);
+      row.appendChild(delBtn('Delete plan', function () { deleteItem('plans', 'plans', it.id, renderPlans); }));
+      list.appendChild(row);
+    });
+  }
+  $('plan-add').addEventListener('click', function () {
+    var title = $('plan-title').value.trim();
+    if (!title) return;
+    var item = {
+      id: newItemId('pl'),
+      title: title,
+      date: $('plan-date').value || todayYmd(),
+      note: $('plan-note').value.trim(),
+      ts: Date.now()
+    };
+    $('plan-title').value = '';
+    $('plan-note').value = '';
+    addItem('plans', 'plans', item, renderPlans);
+  });
+  renderPlans();
+
+  /* ---- our things ---- */
+  function renderThings() {
+    var list = $('things-list');
+    list.innerHTML = '';
+    $('things-empty').style.display = state.things.length ? 'none' : 'block';
+    state.things.forEach(function (it) {
+      var row = document.createElement('div');
+      row.className = 'list-item';
+      var grow = document.createElement('div');
+      grow.className = 'grow';
+      var t = document.createElement('div');
+      t.className = 'item-title';
+      t.textContent = it.text;
+      grow.appendChild(t);
+      row.appendChild(grow);
+      row.appendChild(delBtn('Delete thing', function () { deleteItem('things', 'things', it.id, renderThings); }));
+      list.appendChild(row);
+    });
+  }
+  function addThing() {
+    var v = $('thing-input').value.trim();
+    if (!v) return;
+    $('thing-input').value = '';
+    addItem('things', 'things', { id: newItemId('th'), text: v, ts: Date.now() }, renderThings);
+  }
+  $('thing-add').addEventListener('click', addThing);
+  $('thing-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') addThing(); });
+  renderThings();
+
+  /* ---- moments ---- */
+  function renderMoments() {
+    var list = $('moments-list');
+    list.innerHTML = '';
+    var items = state.moments.slice().sort(function (a, b) {
+      if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+      return (b.ts || 0) - (a.ts || 0);
+    });
+    $('moments-empty').style.display = items.length ? 'none' : 'block';
+    items.forEach(function (it) {
+      var head = document.createElement('p');
+      head.className = 'moment-date';
+      head.textContent = fmtDate(it.date);
+      list.appendChild(head);
+      var row = document.createElement('div');
+      row.className = 'list-item';
+      row.style.marginTop = '4px';
+      var grow = document.createElement('div');
+      grow.className = 'grow';
+      var t = document.createElement('div');
+      t.className = 'item-title';
+      t.textContent = it.text;
+      grow.appendChild(t);
+      row.appendChild(grow);
+      row.appendChild(delBtn('Delete moment', function () { deleteItem('moments', 'moments', it.id, renderMoments); }));
+      list.appendChild(row);
+    });
+  }
+  function addMoment() {
+    var v = $('moment-text').value.trim();
+    if (!v) return;
+    var item = {
+      id: newItemId('mo'),
+      text: v,
+      date: $('moment-date').value || todayYmd(),
+      ts: Date.now()
+    };
+    $('moment-text').value = '';
+    $('moment-date').value = todayYmd();
+    addItem('moments', 'moments', item, renderMoments);
+  }
+  $('moment-add').addEventListener('click', addMoment);
+  $('moment-date').value = todayYmd();
+  renderMoments();
+
+  /* ---- bucket list ---- */
+  function renderBucket() {
+    var list = $('bucket-list');
+    list.innerHTML = '';
+    $('bucket-empty').style.display = state.bucket.length ? 'none' : 'block';
+    state.bucket.forEach(function (it) {
+      var row = document.createElement('div');
+      row.className = 'list-item';
+      var tick = document.createElement('button');
+      tick.className = 'tick-btn' + (it.done ? ' done' : '');
+      tick.textContent = it.done ? '\u2713' : '';
+      tick.setAttribute('aria-label', it.done ? 'Mark as not done' : 'Mark as done');
+      tick.setAttribute('aria-pressed', it.done ? 'true' : 'false');
+      tick.addEventListener('click', function () {
+        it.done = !it.done;
+        it.doneAt = it.done ? todayYmd() : '';
+        save();
+        syncChild('bucket', it.id, it);
+        renderBucket();
+      });
+      var grow = document.createElement('div');
+      grow.className = 'grow';
+      var t = document.createElement('div');
+      t.className = 'item-title' + (it.done ? ' done-text' : '');
+      t.textContent = it.text;
+      grow.appendChild(t);
+      if (it.done && it.doneAt) {
+        var n = document.createElement('div');
+        n.className = 'item-date';
+        n.textContent = 'done ' + fmtDate(it.doneAt);
+        grow.appendChild(n);
+      }
+      row.appendChild(tick);
+      row.appendChild(grow);
+      row.appendChild(delBtn('Delete bucket item', function () { deleteItem('bucket', 'bucket', it.id, renderBucket); }));
+      list.appendChild(row);
+    });
+  }
+  function addBucket() {
+    var v = $('bucket-input').value.trim();
+    if (!v) return;
+    $('bucket-input').value = '';
+    addItem('bucket', 'bucket', { id: newItemId('bk'), text: v, done: false, doneAt: '', ts: Date.now() }, renderBucket);
+  }
+  $('bucket-add').addEventListener('click', addBucket);
+  $('bucket-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') addBucket(); });
+  renderBucket();
+
+  // keep countdown chips and "updated … ago" notes fresh across midnight / idle time
+  setInterval(function () { renderPlans(); renderUs(); }, 60000);
+
   /* ---- share link ---- */
   $('copy-link').addEventListener('click', function () {
     var url = location.origin === 'null' || location.protocol === 'file:'
       ? location.href
       : location.origin + location.pathname + '?room=' + ROOM;
-    function done() { $('copy-link').textContent = 'copied \u2665 send her this exact link'; }
+    function done() { $('copy-link').textContent = 'copied \u2605 send her this exact link'; }
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(url).then(done).catch(function () { prompt('Copy our link:', url); });
     } else {
