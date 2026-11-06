@@ -167,35 +167,6 @@
   #heart-total { color: var(--soft); font-size: .88rem; text-align: center; font-style: italic; margin-top: -8px; }
   #heart-total b { color: var(--muted); font-style: normal; }
 
-  /* ---- countdown ---- */
-  #countdown-card {
-    width: 100%;
-    background: rgba(29, 11, 14, .72);
-    border: 1px solid rgba(255, 183, 3, .22);
-    border-radius: 18px;
-    padding: 20px 18px;
-    text-align: center;
-    backdrop-filter: blur(4px);
-  }
-  #countdown-card .label {
-    font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--soft); margin-bottom: 4px;
-  }
-  #countdown-card .window { font-style: italic; color: var(--muted); font-size: .92rem; margin-bottom: 12px; }
-  #countdown { font-size: 2rem; font-variant-numeric: tabular-nums; color: var(--amber); letter-spacing: .06em; }
-  #countdown small { font-size: 1rem; color: var(--soft); }
-  #change-date {
-    margin-top: 12px;
-    background: none;
-    border: 1px solid var(--soft);
-    color: var(--muted);
-    border-radius: 999px;
-    padding: 7px 16px;
-    font-family: inherit;
-    font-size: .85rem;
-    cursor: pointer;
-  }
-  #change-date:hover { border-color: var(--crimson); color: var(--amber); }
-
   /* ---- shared card ---- */
   .card {
     width: 100%;
@@ -252,9 +223,7 @@
   #reveal-banner { text-align: center; color: var(--crimson); font-style: italic; margin-bottom: 6px; }
   .seal-row { margin-top: 8px; }
 
-  /* ---- verse + daily photo ---- */
-  .verse-text { font-size: 1.15rem; font-style: italic; text-align: center; color: var(--amber); line-height: 1.55; }
-  .verse-ref { text-align: center; color: var(--crimson); margin-top: 8px; font-size: .95rem; }
+  /* ---- photos ---- */
   input[type="text"] {
     width: 100%; background: rgba(5, 12, 11, .55); border: 1px solid rgba(255, 183, 3, .18);
     border-radius: 10px; color: var(--amber); font-family: inherit; font-size: .95rem;
@@ -286,51 +255,53 @@
   label.pill { display: inline-block; }
 
 
-  /* ---- us / plans / things / moments / bucket ---- */
-  input[type="date"] {
-    width: 100%; background: rgba(5, 12, 11, .55); border: 1px solid rgba(255, 183, 3, .18);
-    border-radius: 10px; color: var(--amber); font-family: inherit; font-size: .95rem;
-    padding: 10px 12px; color-scheme: dark;
-  }
-  input[type="date"]:focus { outline: none; border-color: var(--crimson); }
+  /* ---- shared lists (bucket / movies) ---- */
   .add-row { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
   .add-row input { flex: 1; min-width: 0; margin-top: 0; }
   .add-row .pill { flex: none; }
-  .us-row { background: rgba(10, 4, 5, .5); border-radius: 12px; padding: 12px; margin-top: 10px; }
-  .us-row .who { font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--soft); margin-bottom: 6px; }
-  .us-status { font-size: 1.02rem; color: var(--amber); white-space: pre-wrap; }
-  .us-status.empty { color: var(--soft); font-style: italic; }
-  .updated-note { color: var(--soft); font-size: .78rem; font-style: italic; margin-top: 4px; min-height: 1em; }
   .list-item { display: flex; gap: 10px; align-items: flex-start; background: rgba(10, 4, 5, .5); border-radius: 12px; padding: 10px 12px; margin-top: 8px; }
   .list-item .grow { flex: 1; min-width: 0; }
-  .list-item.dim { opacity: .55; }
   .item-title { color: var(--amber); font-size: 1rem; white-space: pre-wrap; }
   .item-note { color: var(--muted); font-size: .9rem; margin-top: 2px; white-space: pre-wrap; }
   .item-date { color: var(--soft); font-size: .8rem; margin-top: 2px; }
-  .chip { flex: none; border: 1px solid rgba(255, 183, 3, .35); color: #ffd166; border-radius: 999px; padding: 3px 10px; font-size: .78rem; font-style: italic; margin-top: 2px; }
-  .chip.past { border-color: rgba(255, 255, 255, .12); color: var(--soft); }
   .del-btn { flex: none; background: none; border: none; color: var(--soft); font-family: inherit; font-size: 1rem; line-height: 1; cursor: pointer; padding: 2px 4px; }
   .del-btn:hover { color: var(--crimson); }
   .tick-btn { flex: none; width: 26px; height: 26px; border-radius: 50%; border: 1px solid var(--soft); background: none; color: #ffd166; cursor: pointer; font-size: .85rem; line-height: 1; padding: 0; margin-top: 1px; }
   .tick-btn.done { border-color: var(--crimson); background: rgba(255, 194, 75, .15); }
   .done-text { text-decoration: line-through; color: var(--muted); }
-  .moment-date { color: var(--soft); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; margin-top: 14px; }
   .empty-note { color: var(--muted); font-style: italic; text-align: center; font-size: .95rem; margin-top: 8px; }
 
-  /* ---- sleep / wind-down ---- */
-  #stars-line { text-align: center; color: var(--muted); font-style: italic; font-size: .95rem; margin-bottom: 12px; }
-  .gn-line { text-align: center; font-size: 1.2rem; font-style: italic; color: var(--amber); margin: 8px 0 14px; }
   .sleep-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: center; margin-top: 10px; }
-  #rec-status { color: var(--muted); font-size: .85rem; font-style: italic; }
-  #gn-audio { width: 100%; margin-top: 12px; }
-  #winddown-hint { color: #9db4d4; font-size: .85rem; font-style: italic; }
-  #winddown-btn.late { border-color: #9db4d4; color: #cdd9ee; box-shadow: 0 0 12px rgba(157, 180, 212, .35); }
-  body.winddown .dim { opacity: .1; pointer-events: none; filter: saturate(.5); transition: opacity 1.2s ease; }
-  body.winddown #handoff { opacity: .45; transition: opacity 1.2s ease; }
-  body.winddown #moon { transform: scale(1.3); transition: transform 2s ease; }
-  body.winddown .star { animation-duration: 8s; }
-  body.winddown { background: radial-gradient(ellipse 120% 90% at 50% 110%, #140608 0%, #0a0304 60%, #050202 100%); }
-  #handoff, #heart-zone, #question-card, #countdown-card { transition: opacity 1.2s ease; }
+  #handoff, #heart-zone, #question-card { transition: opacity 1.2s ease; }
+
+  /* ---- calendar ---- */
+  .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .cal-title { font-size: 1.05rem; color: var(--amber); letter-spacing: .06em; }
+  .cal-nav {
+    width: 34px; height: 34px; border-radius: 50%; flex: none;
+    border: 1px solid var(--soft); background: none; color: var(--muted);
+    font-family: inherit; font-size: 1.15rem; line-height: 1; cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cal-nav:hover { border-color: var(--crimson); color: var(--amber); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-dow { text-align: center; font-size: .66rem; letter-spacing: .1em; text-transform: uppercase; color: var(--soft); padding: 2px 0 4px; }
+  .cal-day {
+    position: relative; text-align: center; font-size: .88rem; color: var(--amber);
+    padding: 6px 0 11px; border-radius: 10px; background: rgba(255, 255, 255, .02);
+  }
+  .cal-day.other { color: var(--soft); opacity: .45; background: none; }
+  .cal-day.today { box-shadow: inset 0 0 0 1.5px var(--crimson); background: rgba(255, 194, 75, .09); color: #ffd166; }
+  .cal-dots { position: absolute; left: 0; right: 0; bottom: 4px; display: flex; gap: 3px; justify-content: center; }
+  .cal-dot { width: 5px; height: 5px; border-radius: 50%; }
+  .dot-nsw { background: #8ecae6; }
+  .dot-pl { background: #ff8fab; }
+  .cal-star { position: absolute; left: 0; right: 0; bottom: 2px; font-size: .62rem; color: var(--crimson); text-shadow: 0 0 6px var(--crimson-deep); }
+  .cal-events { margin-top: 12px; }
+  .cal-ev { font-size: .92rem; color: var(--muted); padding: 3px 2px; border-top: 1px solid rgba(255, 183, 3, .1); }
+  .cal-ev:first-child { border-top: none; }
+  .cal-region { color: var(--soft); font-size: .85rem; }
+  .cal-star-inline { color: var(--crimson); font-size: .8rem; }
 
   footer { color: var(--soft); font-size: .8rem; font-style: italic; text-align: center; }
   footer .pill { margin-top: 10px; font-style: normal; }
@@ -414,84 +385,6 @@
     </div>
   </section>
 
-  <section id="verse-card" class="card">
-    <div class="card-label">Verse of the day</div>
-    <p class="verse-text" id="verse-display"></p>
-    <p class="verse-ref" id="verse-reference-display"></p>
-    <div id="verse-edit">
-      <textarea id="verse-text" rows="3" placeholder="Type today's verse here — only this one is kept"></textarea>
-      <input id="verse-reference" type="text" placeholder="Reference — e.g. Psalm 46:1">
-      <div class="seal-row" style="text-align:center">
-        <button class="pill" id="verse-save">save today's verse</button>
-        <button class="pill" id="verse-clear" style="display:none">clear verse</button>
-      </div>
-      <div class="seal-row" style="text-align:center"><span class="mini-status" id="verse-status"></span></div>
-    </div>
-    <p class="reset-note">A fresh verse can be added after 8:00pm her time.</p>
-  </section>
-
-  <section id="countdown-card" class="dim">
-    <div class="label">The golden window</div>
-    <div class="window" id="window-desc">Saturday 10:00am your time &middot; Friday 7:00pm hers</div>
-    <div id="countdown">--:--:--:--</div>
-    <button id="change-date">set a new date</button>
-  </section>
-
-  <section id="us-card" class="card">
-    <div class="card-label">Us today</div>
-    <div class="us-row">
-      <div class="who">Ethan</div>
-      <p class="us-status" id="us-status-his"></p>
-      <p class="updated-note" id="us-updated-his"></p>
-      <div class="add-row">
-        <input type="text" id="us-input-his" placeholder="what Ethan is up to" maxlength="140">
-        <button class="pill" id="us-save-his">save</button>
-      </div>
-    </div>
-    <div class="us-row">
-      <div class="who">Adwi</div>
-      <p class="us-status" id="us-status-hers"></p>
-      <p class="updated-note" id="us-updated-hers"></p>
-      <div class="add-row">
-        <input type="text" id="us-input-hers" placeholder="what Adwi is up to" maxlength="140">
-        <button class="pill" id="us-save-hers">save</button>
-      </div>
-    </div>
-  </section>
-
-  <section id="plans-card" class="card">
-    <div class="card-label">Plans</div>
-    <div id="plans-list"></div>
-    <p class="empty-note" id="plans-empty">Nothing planned yet — the next good thing goes here.</p>
-    <input type="text" id="plan-title" placeholder="what are we doing?" maxlength="120">
-    <div class="add-row">
-      <input type="date" id="plan-date" aria-label="Plan date">
-      <button class="pill" id="plan-add">add plan</button>
-    </div>
-    <input type="text" id="plan-note" placeholder="note (optional)" maxlength="200">
-  </section>
-
-  <section id="things-card" class="card">
-    <div class="card-label">Our things</div>
-    <div id="things-list"></div>
-    <p class="empty-note" id="things-empty">Nothing here yet — a film, a game, something for a rainy day.</p>
-    <div class="add-row">
-      <input type="text" id="thing-input" placeholder="something to watch, play or do together" maxlength="160">
-      <button class="pill" id="thing-add">add</button>
-    </div>
-  </section>
-
-  <section id="moments-card" class="card">
-    <div class="card-label">Moments</div>
-    <div id="moments-list"></div>
-    <p class="empty-note" id="moments-empty">No moments saved yet.</p>
-    <input type="text" id="moment-text" placeholder="a moment worth keeping" maxlength="240">
-    <div class="add-row">
-      <input type="date" id="moment-date" aria-label="Moment date">
-      <button class="pill" id="moment-add">add moment</button>
-    </div>
-  </section>
-
   <section id="bucket-card" class="card">
     <div class="card-label">Bucket list</div>
     <div id="bucket-list"></div>
@@ -502,17 +395,39 @@
     </div>
   </section>
 
+  <section id="movies-card" class="card">
+    <div class="card-label">Movies to watch</div>
+    <div id="movies-list"></div>
+    <p class="empty-note" id="movies-empty">No movies yet — add the first one.</p>
+    <div class="add-row">
+      <input type="text" id="movie-input" placeholder="a movie we should watch" maxlength="160">
+      <button class="pill" id="movie-add">add</button>
+    </div>
+  </section>
+
+  <section id="calendar-card" class="card">
+    <div class="card-label">Calendar</div>
+    <div class="cal-head">
+      <button class="cal-nav" id="cal-prev" aria-label="Previous month">&#8249;</button>
+      <div class="cal-title" id="cal-title"></div>
+      <button class="cal-nav" id="cal-next" aria-label="Next month">&#8250;</button>
+    </div>
+    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-events" id="cal-events"></div>
+    <p class="empty-note" id="cal-empty" style="display:none">Nothing marked this month.</p>
+  </section>
+
   <section id="photo-card" class="card">
-    <div class="card-label">Today's photos</div>
+    <div class="card-label">This week's photos</div>
     <div id="photo-gallery"></div>
-    <p class="photo-empty" id="photo-empty">No photos for this cycle yet.</p>
+    <p class="photo-empty" id="photo-empty">No photos this week yet.</p>
     <div class="sleep-row">
       <label class="pill" for="photo-input">add photos</label>
       <input id="photo-input" type="file" accept="image/*" multiple style="display:none">
       <button class="pill" id="photo-clear" style="display:none">clear all</button>
       <span class="mini-status" id="photo-status"></span>
     </div>
-    <p class="reset-note">Tap a photo to see it big. The gallery clears on its own at 8:00pm her time.</p>
+    <p class="reset-note">Tap a photo to see it big. A fresh gallery starts each week — last week's photos stay stored, just tucked away.</p>
   </section>
 
   <div id="photo-lightbox" role="dialog" aria-label="Photo viewer">
@@ -522,28 +437,6 @@
       <button class="pill" id="lightbox-close">close</button>
     </div>
   </div>
-
-  <section id="sleep-card" class="card">
-    <div class="card-label">For rough nights</div>
-    <p id="stars-line"></p>
-    <p class="gn-line" id="gn-display"></p>
-    <div id="gn-edit">
-      <textarea id="gn-text" rows="2" placeholder="words for a rough night — write them once, they're here whenever they're needed"></textarea>
-      <div class="seal-row" style="text-align:center"><button class="pill" id="gn-save">save the words</button></div>
-    </div>
-    <div class="sleep-row">
-      <button class="pill" id="rec-btn">&#9679; record a voice note</button>
-      <span id="rec-status"></span>
-    </div>
-    <audio id="gn-audio" controls style="display:none"></audio>
-    <div class="sleep-row">
-      <button class="pill" id="gn-del" style="display:none">delete recording</button>
-    </div>
-    <div class="sleep-row">
-      <button class="pill" id="winddown-btn">&#127769; wind down</button>
-      <span id="winddown-hint"></span>
-    </div>
-  </section>
 
   <footer>
     every star lands in the same sky. no reply owed, ever.
@@ -620,7 +513,7 @@
     return {
       hearts: 0, stars: [], target: DEFAULT_TARGET, answers: {}, gnText: '', gnAudio: null, gnCycle: '',
       heartColor: 'red', verse: { text: '', ref: '', cycle: '' }, photo: null, photos: [], photoCycle: '',
-      usboard: { his: { text: '', ts: 0 }, hers: { text: '', ts: 0 } }, plans: [], things: [], moments: [], bucket: []
+      usboard: { his: { text: '', ts: 0 }, hers: { text: '', ts: 0 } }, plans: [], things: [], moments: [], bucket: [], movies: [], photoArchive: {}
     };
   }
   function save() {
@@ -685,6 +578,20 @@
     if (typeof p.doneAt !== 'string') p.doneAt = '';
     if (typeof p.ts !== 'number') p.ts = 0;
   });
+  if (!Array.isArray(state.movies)) state.movies = [];
+  state.movies = state.movies.filter(function (p) { return p && typeof p.id === 'string' && typeof p.title === 'string'; });
+  state.movies.forEach(function (p) {
+    if (typeof p.watched !== 'boolean') p.watched = false;
+    if (typeof p.watchedAt !== 'string') p.watchedAt = '';
+    if (typeof p.ts !== 'number') p.ts = 0;
+  });
+  if (!state.photoArchive || typeof state.photoArchive !== 'object' || Array.isArray(state.photoArchive)) state.photoArchive = {};
+  Object.keys(state.photoArchive).forEach(function (wk) {
+    var arr = state.photoArchive[wk];
+    if (!Array.isArray(arr)) { delete state.photoArchive[wk]; return; }
+    state.photoArchive[wk] = arr.filter(function (p) { return p && typeof p.id === 'string' && typeof p.img === 'string'; });
+    if (!state.photoArchive[wk].length) delete state.photoArchive[wk];
+  });
   if (!state.target) state.target = DEFAULT_TARGET;
 
   function newCid() {
@@ -695,57 +602,6 @@
   var knownCids = {};
   state.stars.forEach(function (st) { if (st.cid) knownCids[st.cid] = true; });
   save();
-
-  /* ---- goodnight reset: 8:00pm in Warsaw, Indiana ---- */
-  var HER_TZ = 'America/Indiana/Indianapolis';
-  function indianaParts(date) {
-    var parts = new Intl.DateTimeFormat('en-CA', {
-      timeZone: HER_TZ, year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
-    }).formatToParts(date || new Date());
-    var out = {};
-    parts.forEach(function (part) {
-      if (part.type !== 'literal') out[part.type] = parseInt(part.value, 10);
-    });
-    return out;
-  }
-  function goodnightCycleKey(date) {
-    var p = indianaParts(date);
-    var boundary = new Date(Date.UTC(p.year, p.month - 1, p.day + (p.hour >= 20 ? 1 : 0)));
-    return boundary.getUTCFullYear() + '-' +
-      String(boundary.getUTCMonth() + 1).padStart(2, '0') + '-' +
-      String(boundary.getUTCDate()).padStart(2, '0');
-  }
-  function stampGoodnightCycle() {
-    state.gnCycle = goodnightCycleKey();
-  }
-  function expireGoodnight(remoteAlready) {
-    var hadContent = !!state.gnText || !!state.gnAudio;
-    state.gnText = '';
-    state.gnAudio = null;
-    stampGoodnightCycle();
-    save();
-    renderSleep();
-    showAudio();
-    if ($('gn-text')) $('gn-text').value = '';
-    if ($('rec-status') && hadContent) $('rec-status').textContent = 'cleared for a fresh goodnight \u2605';
-    if (!remoteAlready && roomRef) {
-      roomRef.child('gnText').set('').catch(function () {});
-      roomRef.child('gnAudio').remove().catch(function () {});
-      roomRef.child('gnCycle').set(state.gnCycle).catch(function () {});
-    }
-  }
-  function checkGoodnightExpiry() {
-    var current = goodnightCycleKey();
-    if (!state.gnCycle) {
-      state.gnCycle = current;
-      save();
-      syncSet('gnCycle', current);
-      return;
-    }
-    if (state.gnCycle !== current) expireGoodnight(false);
-    if (todayKey() !== skyDay) { skyDay = todayKey(); refreshSky(); }
-  }
 
   function loadPending() {
     try { return JSON.parse(localStorage.getItem(PENDING_KEY) || '[]'); } catch (e) { return []; }
@@ -868,7 +724,7 @@
   var countsTimer = null;
   function renderCountsSoon() {
     if (countsTimer) return;
-    countsTimer = setTimeout(function () { countsTimer = null; renderCount(); renderSleep(); }, 400);
+    countsTimer = setTimeout(function () { countsTimer = null; renderCount(); }, 400);
   }
   drawSky();
   var skyDay = todayKey();
@@ -876,7 +732,6 @@
     skyTop.innerHTML = '';
     drawSky();
     renderCount();
-    renderSleep();
   }
 
   function todayKey() {
@@ -965,56 +820,6 @@
         var v = snap.val();
         if (v) { state.answers = v; save(); renderQuestion(); }
       });
-      roomRef.child('gnText').on('value', function (snap) {
-        var v = snap.val();
-        if (v === null) v = '';
-        if (typeof v === 'string' && v !== state.gnText) {
-          state.gnText = v; save();
-          if (document.activeElement !== $('gn-text')) $('gn-text').value = v;
-          renderSleep();
-        }
-      });
-      roomRef.child('target').on('value', function (snap) {
-        var v = snap.val();
-        if (typeof v === 'string' && v !== state.target) {
-          state.target = v; save(); renderWindowDesc(); tickCountdown();
-        }
-      });
-      roomRef.child('gnAudio').on('value', function (snap) {
-        var v = snap.val();
-        if (v === null) {
-          if (state.gnAudio) { state.gnAudio = null; save(); showAudio(); }
-          return;
-        }
-        if (typeof v === 'string' && v !== state.gnAudio) {
-          state.gnAudio = v; save(); showAudio();
-        }
-      });
-      roomRef.child('gnCycle').on('value', function (snap) {
-        var v = snap.val();
-        if (typeof v === 'string' && v && state.gnCycle !== v) {
-          state.gnCycle = v;
-          save();
-        }
-      });
-      roomRef.child('verse').on('value', function (snap) {
-        var v = snap.val();
-        if (!v) {
-          if (state.verse.text || state.verse.ref) {
-            state.verse = { text: '', ref: '', cycle: goodnightCycleKey() };
-            save(); renderVerse();
-          }
-          return;
-        }
-        var next = {
-          text: typeof v.text === 'string' ? v.text : '',
-          ref: typeof v.ref === 'string' ? v.ref : '',
-          cycle: typeof v.cycle === 'string' ? v.cycle : ''
-        };
-        if (next.text !== state.verse.text || next.ref !== state.verse.ref || next.cycle !== state.verse.cycle) {
-          state.verse = next; save(); renderVerse();
-        }
-      });
       roomRef.child('photos').on('value', function (snap) {
         var v = snap.val();
         var next = [];
@@ -1026,6 +831,28 @@
         var cur = state.photos.map(function (p) { return p.id; }).join(',');
         var nxt = next.map(function (p) { return p.id; }).join(',');
         if (cur !== nxt) { state.photos = next; save(); showPhotos(); }
+      });
+      roomRef.child('photosArchive').on('value', function (snap) {
+        var v = snap.val();
+        var next = {};
+        if (v && typeof v === 'object') {
+          Object.keys(v).forEach(function (wk) {
+            var inner = v[wk];
+            if (inner && typeof inner === 'object') {
+              var list = [];
+              Object.keys(inner).sort().forEach(function (id) {
+                if (typeof inner[id] === 'string') list.push({ id: id, img: inner[id] });
+              });
+              if (list.length) next[wk] = list;
+            }
+          });
+        }
+        var sigA = function (o) {
+          return Object.keys(o).sort().map(function (k) {
+            return k + ':' + o[k].map(function (p) { return p.id; }).join(',');
+          }).join('|');
+        };
+        if (sigA(next) !== sigA(state.photoArchive)) { state.photoArchive = next; save(); }
       });
       // legacy: a phone still running the old single-photo page writes 'photo' — fold it into the gallery
       roomRef.child('photo').on('value', function (snap) {
@@ -1045,38 +872,8 @@
           save();
         }
       });
-      roomRef.child('usboard').on('value', function (snap) {
-        var v = snap.val();
-        if (!v || typeof v !== 'object') {
-          // first contact with an empty room: share what this phone already has
-          if (!usboardPrimed) {
-            usboardPrimed = true;
-            if (state.usboard.his.text || state.usboard.hers.text) {
-              syncSet('usboard/his', state.usboard.his);
-              syncSet('usboard/hers', state.usboard.hers);
-            }
-          }
-          return;
-        }
-        usboardPrimed = true;
-        var changed = false;
-        ['his', 'hers'].forEach(function (k) {
-          var it = v[k];
-          var next = {
-            text: it && typeof it.text === 'string' ? it.text : '',
-            ts: it && typeof it.ts === 'number' ? it.ts : 0
-          };
-          if (next.text !== state.usboard[k].text || next.ts !== state.usboard[k].ts) {
-            state.usboard[k] = next;
-            changed = true;
-          }
-        });
-        if (changed) { save(); renderUs(); }
-      });
-      attachList('plans', 'plans', renderPlans);
-      attachList('things', 'things', renderThings);
-      attachList('moments', 'moments', renderMoments);
       attachList('bucket', 'bucket', renderBucket);
+      attachList('movies', 'movies', renderMovies);
       runDailyResetChecks();
       db.ref('.info/connected').on('value', function (snap) {
         if (snap.val() === true) { setSync('live', 'one sky, two phones — live'); flushPending(); }
@@ -1144,7 +941,6 @@
       saveSoon();
       renderStar(star, true);
       renderCount();
-      renderSleep();
       if (syncLive) pushStar(star);
       else if (SYNC_CONFIGURED) { pendingStars.push(star.cid); savePending(pendingStars); }
     };
@@ -1189,53 +985,6 @@
   tickClocks();
   setInterval(tickClocks, 1000);
 
-  /* ---- countdown ---- */
-  function targetDate() { return new Date(state.target); }
-  function renderWindowDesc() {
-    var d = targetDate();
-    var his = new Intl.DateTimeFormat('en-AU', {
-      timeZone: 'Australia/Sydney', weekday: 'long', hour: 'numeric', minute: '2-digit', hour12: true
-    }).format(d);
-    var hers = new Intl.DateTimeFormat('en-AU', {
-      timeZone: 'America/Indiana/Indianapolis', weekday: 'long', hour: 'numeric', minute: '2-digit', hour12: true
-    }).format(d);
-    $('window-desc').textContent = his + ' your time \u00B7 ' + hers + ' hers';
-  }
-  function tickCountdown() {
-    var diff = targetDate().getTime() - Date.now();
-    var el = $('countdown');
-    if (diff <= 0) { el.innerHTML = 'it\u2019s time <small>\u2605</small>'; return; }
-    var s = Math.floor(diff / 1000);
-    var d = Math.floor(s / 86400); s -= d * 86400;
-    var h = Math.floor(s / 3600); s -= h * 3600;
-    var m = Math.floor(s / 60); s -= m * 60;
-    function p(n) { return String(n).padStart(2, '0'); }
-    el.innerHTML = d + '<small>d</small> ' + p(h) + '<small>h</small> ' + p(m) + '<small>m</small> ' + p(s) + '<small>s</small>';
-  }
-  renderWindowDesc();
-  tickCountdown();
-  setInterval(tickCountdown, 1000);
-
-  $('change-date').addEventListener('click', function () {
-    var cur = targetDate();
-    var input = prompt('New countdown target (YYYY-MM-DD HH:MM, Sydney time):',
-      cur.getFullYear() + '-' + String(cur.getMonth() + 1).padStart(2, '0') + '-' +
-      String(cur.getDate()).padStart(2, '0') + ' ' +
-      String(cur.getHours()).padStart(2, '0') + ':' + String(cur.getMinutes()).padStart(2, '0'));
-    if (!input) return;
-    var m = input.match(/^(\d{4})-(\d{2})-(\d{2})[ T](\d{2}):(\d{2})$/);
-    if (!m) { alert('Could not read that date — try YYYY-MM-DD HH:MM.'); return; }
-    // interpret in Sydney time (AEDT, UTC+11 for Oct–Apr)
-    var iso = m[1] + '-' + m[2] + '-' + m[3] + 'T' + m[4] + ':' + m[5] + ':00+11:00';
-    var nd = new Date(iso);
-    if (isNaN(nd.getTime())) { alert('That date did not work — try again.'); return; }
-    state.target = iso;
-    save();
-    syncSet('target', iso);
-    renderWindowDesc();
-    tickCountdown();
-  });
-
   /* ---- daily question (both answer to reveal) ---- */
   var QUESTIONS = [
     'One small thing that made you smile today?',
@@ -1252,16 +1001,33 @@
     'When did you last feel really proud of yourself?',
     'What\u2019s something you want us to still be doing a year from now?',
     'What does a good life look like to you, five years from now?',
-    'What\u2019s one thing you never want us to stop doing?'
+    'What\u2019s one thing you never want us to stop doing?',
+    'What\u2019s a tiny, ordinary moment from this week you wish you could replay?',
+    'If you could instantly be good at one new thing, what are we picking?',
+    'What\u2019s the best meal you\u2019ve had this year \u2014 who made it, and where were you?',
+    'What\u2019s a place you\u2019ve never been that you\u2019re sure you\u2019d love?',
+    'When you\u2019re having a rough day, what actually helps \u2014 not the polite answer, the real one?',
+    'What\u2019s something small you\u2019re looking forward to right now?',
+    'Who taught you something you still use every week?',
+    'What\u2019s a dream you had as a kid that you secretly still want?',
+    'Describe the house you\u2019d live in if money and distance didn\u2019t matter.',
+    'What\u2019s a compliment you\u2019ve never forgotten?',
+    'If we had one whole day in the same city, plan it \u2014 where do we go first?',
+    'What\u2019s something you\u2019ve changed your mind about in the last year?',
+    'What\u2019s your favourite way to waste an hour?',
+    'What\u2019s a story from your family that gets retold at every gathering?',
+    'What do you hope is true about us ten years from now?'
   ];
   var Q_EPOCH = Date.UTC(2026, 9, 22);
-  var qIdx = Math.floor((Date.now() - Q_EPOCH) / 86400000) % QUESTIONS.length;
-  if (qIdx < 0) qIdx = 0;
+  var qDay = Math.floor((Date.now() - Q_EPOCH) / 86400000);
+  if (qDay < 0) qDay = 0;
+  var qIdx = qDay % QUESTIONS.length;
+  var aKey = 'd' + qDay;
   $('q-text').textContent = QUESTIONS[qIdx];
 
   function curAnswer() {
-    if (!state.answers[qIdx]) state.answers[qIdx] = { his: '', hers: '', hisSealed: false, hersSealed: false };
-    return state.answers[qIdx];
+    if (!state.answers[aKey]) state.answers[aKey] = { his: '', hers: '', hisSealed: false, hersSealed: false };
+    return state.answers[aKey];
   }
   function renderQuestion() {
     var a = curAnswer();
@@ -1293,7 +1059,7 @@
     $('reveal-banner').style.display = (a.hisSealed && a.hersSealed) ? 'block' : 'none';
   }
   function syncAnswer() {
-    syncSet('answers/' + qIdx, curAnswer());
+    syncSet('answers/' + aKey, curAnswer());
   }
   $('save-his').addEventListener('click', function () {
     var a = curAnswer();
@@ -1315,59 +1081,34 @@
   });
   renderQuestion();
 
-  /* ---- verse of the day: one manually entered verse per cycle ---- */
-  function renderVerse() {
-    var has = !!(state.verse.text || state.verse.ref);
-    $('verse-display').textContent = has && state.verse.text
-      ? '\u201c' + state.verse.text + '\u201d'
-      : (has ? '' : 'No verse has been added for this cycle yet.');
-    $('verse-reference-display').textContent = has && state.verse.ref ? '\u2014 ' + state.verse.ref : '';
-    if (document.activeElement !== $('verse-text')) $('verse-text').value = state.verse.text || '';
-    if (document.activeElement !== $('verse-reference')) $('verse-reference').value = state.verse.ref || '';
-    $('verse-clear').style.display = has ? 'inline-block' : 'none';
+  /* ---- this week's photos: a small gallery on a weekly cycle ---- */
+  var WEEK_MS = 7 * 86400000;
+  function weekCycleKey() {
+    var n = Math.floor((Date.now() - Q_EPOCH) / WEEK_MS);
+    if (n < 0) n = 0;
+    return 'w' + n;
   }
-  function expireVerse(remoteAlready) {
-    var had = !!(state.verse.text || state.verse.ref);
-    state.verse = { text: '', ref: '', cycle: goodnightCycleKey() };
-    save();
-    renderVerse();
-    if ($('verse-status') && had) $('verse-status').textContent = 'cleared for a fresh verse \u2605';
-    if (!remoteAlready && roomRef) {
-      roomRef.child('verse').set(state.verse).catch(function () {});
-    }
+  function syncPhotoArchive() {
+    if (!roomRef) return;
+    var obj = {};
+    var any = false;
+    Object.keys(state.photoArchive).forEach(function (wk) {
+      var inner = {};
+      state.photoArchive[wk].forEach(function (p) { inner[p.id] = p.img; });
+      if (Object.keys(inner).length) { obj[wk] = inner; any = true; }
+    });
+    if (any) roomRef.child('photosArchive').set(obj).catch(function () {});
+    else roomRef.child('photosArchive').remove().catch(function () {});
   }
-  function checkVerseExpiry() {
-    var current = goodnightCycleKey();
-    if (!state.verse.text && !state.verse.ref) {
-      if (state.verse.cycle !== current) { state.verse.cycle = current; save(); }
-      return;
-    }
-    if (!state.verse.cycle) {
-      state.verse.cycle = current;
-      save();
-      syncSet('verse', state.verse);
-      return;
-    }
-    if (state.verse.cycle !== current) expireVerse(false);
+  function archiveCurrentPhotos() {
+    if (!state.photos.length) return;
+    var key = state.photoCycle || weekCycleKey();
+    if (!state.photoArchive[key]) state.photoArchive[key] = [];
+    state.photos.forEach(function (p) {
+      var exists = state.photoArchive[key].some(function (q) { return q.id === p.id; });
+      if (!exists) state.photoArchive[key].push({ id: p.id, img: p.img });
+    });
   }
-  $('verse-save').addEventListener('click', function () {
-    state.verse.text = $('verse-text').value.trim();
-    state.verse.ref = $('verse-reference').value.trim();
-    state.verse.cycle = goodnightCycleKey();
-    save();
-    syncSet('verse', state.verse);
-    renderVerse();
-    $('verse-status').textContent = state.verse.text || state.verse.ref
-      ? 'saved \u2605 — only this verse is kept, and it clears at 8:00pm her time.'
-      : '';
-  });
-  $('verse-clear').addEventListener('click', function () {
-    expireVerse(false);
-    $('verse-status').textContent = '';
-  });
-  renderVerse();
-
-  /* ---- today's photos: a small gallery per cycle ---- */
   function photosObject() {
     if (!state.photos.length) return null;
     var obj = {};
@@ -1414,16 +1155,33 @@
   $('lightbox-delete').addEventListener('click', function () {
     if (!lightboxId) return;
     state.photos = state.photos.filter(function (p) { return p.id !== lightboxId; });
-    state.photoCycle = goodnightCycleKey();
+    state.photoCycle = weekCycleKey();
     save(); syncPhotos(); syncSet('photoCycle', state.photoCycle);
     closePhoto(); showPhotos();
     $('photo-status').textContent = 'photo deleted \u2605';
   });
-  function expirePhoto(remoteAlready) {
+  function rolloverPhotos(remoteAlready) {
+    var had = state.photos.length > 0;
+    archiveCurrentPhotos();
+    state.photos = [];
+    state.photo = null;
+    state.photoCycle = weekCycleKey();
+    save();
+    closePhoto();
+    showPhotos();
+    if ($('photo-status') && had) $('photo-status').textContent = 'a new week \u2014 a fresh gallery \u2605';
+    if (!remoteAlready && roomRef) {
+      roomRef.child('photos').remove().catch(function () {});
+      roomRef.child('photo').remove().catch(function () {});
+      roomRef.child('photoCycle').set(state.photoCycle).catch(function () {});
+      syncPhotoArchive();
+    }
+  }
+  function clearGallery(remoteAlready) {
     var had = state.photos.length > 0;
     state.photos = [];
     state.photo = null;
-    state.photoCycle = goodnightCycleKey();
+    state.photoCycle = weekCycleKey();
     save();
     closePhoto();
     showPhotos();
@@ -1435,21 +1193,25 @@
     }
   }
   function checkPhotoExpiry() {
-    var current = goodnightCycleKey();
-    if (!state.photos.length) {
-      if (state.photoCycle !== current) { state.photoCycle = current; save(); }
-      return;
-    }
+    var current = weekCycleKey();
     if (!state.photoCycle) {
       state.photoCycle = current;
       save();
       syncSet('photoCycle', current);
       return;
     }
-    if (state.photoCycle !== current) expirePhoto(false);
+    if (state.photoCycle !== current) {
+      if (!state.photos.length) {
+        state.photoCycle = current;
+        save();
+        syncSet('photoCycle', current);
+        return;
+      }
+      rolloverPhotos(false);
+    }
   }
   $('photo-clear').addEventListener('click', function () {
-    expirePhoto(false);
+    clearGallery(false);
     $('photo-status').textContent = '';
   });
   function addPhotoFile(file, done) {
@@ -1474,7 +1236,7 @@
       }
       if (data.length > GALLERY_PHOTO_LIMIT) { done('one photo was still too large to share here.'); return; }
       state.photos.push({ id: 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7), img: data });
-      state.photoCycle = goodnightCycleKey();
+      state.photoCycle = weekCycleKey();
       save();
       syncPhotos();
       syncSet('photoCycle', state.photoCycle);
@@ -1494,7 +1256,7 @@
     if (!files.length) return;
     var room = MAX_PHOTOS - state.photos.length;
     if (room <= 0) {
-      $('photo-status').textContent = 'the gallery is full for this cycle (max ' + MAX_PHOTOS + ') \u2605';
+      $('photo-status').textContent = 'the gallery is full for this week (max ' + MAX_PHOTOS + ') \u2605';
       return;
     }
     if (files.length > room) files = files.slice(0, room);
@@ -1503,7 +1265,7 @@
     function next() {
       if (i >= files.length) {
         $('photo-status').textContent = added
-          ? 'saved \u2605 — the gallery clears at 8:00pm her time.'
+          ? 'saved \u2605 — these stay up for the whole week.'
           : (lastErr || 'no photos were added.');
         return;
       }
@@ -1516,154 +1278,10 @@
   });
   showPhotos();
 
-  /* ---- goodnight words + the sky she sleeps under ---- */
-  function renderSleep() {
-    var n = heartsToday();
-    $('stars-line').textContent = n === 0
-      ? 'the sky is still empty \u2014 the first star starts it.'
-      : 'tonight the sky holds ' + n + ' star' + (n === 1 ? '' : 's') + ' between you.';
-  }
-  if (state.gnText) $('gn-text').value = state.gnText;
-  $('gn-save').addEventListener('click', function () {
-    state.gnText = $('gn-text').value.trim();
-    stampGoodnightCycle();
-    save(); syncSet('gnText', state.gnText); syncSet('gnCycle', state.gnCycle); renderSleep();
-    $('rec-status').textContent = state.gnText ? 'saved \u2605' : '';
-  });
-  renderSleep();
-  setInterval(renderSleep, 5000);
-
-  /* ---- goodnight voice note ---- */
-  var mediaRecorder = null, recChunks = [], recStream = null;
-  function showAudio() {
-    var au = $('gn-audio');
-    if (state.gnAudio) {
-      au.src = state.gnAudio;
-      au.style.display = 'block';
-      $('gn-del').style.display = 'inline-block';
-      $('rec-btn').innerHTML = '&#9679; record it again';
-    } else {
-      au.removeAttribute('src');
-      au.style.display = 'none';
-      $('gn-del').style.display = 'none';
-      $('rec-btn').innerHTML = '&#9679; record a voice note';
-    }
-  }
-  showAudio();
-  $('gn-del').addEventListener('click', function () {
-    state.gnAudio = null; stampGoodnightCycle(); save(); showAudio();
-    if (roomRef) {
-      roomRef.child('gnAudio').remove().catch(function () {});
-      roomRef.child('gnCycle').set(state.gnCycle).catch(function () {});
-    }
-    $('rec-status').textContent = '';
-  });
-  $('rec-btn').addEventListener('click', function () {
-    if (mediaRecorder && mediaRecorder.state === 'recording') { mediaRecorder.stop(); return; }
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || typeof MediaRecorder === 'undefined') {
-      $('rec-status').textContent = 'mic isn\u2019t available in this browser \u2014 the written goodnight above still works.';
-      return;
-    }
-    navigator.mediaDevices.getUserMedia({ audio: true }).then(function (stream) {
-      recStream = stream;
-      recChunks = [];
-      mediaRecorder = new MediaRecorder(stream);
-      mediaRecorder.ondataavailable = function (e) { if (e.data && e.data.size) recChunks.push(e.data); };
-      mediaRecorder.onstop = function () {
-        if (recStream) recStream.getTracks().forEach(function (t) { t.stop(); });
-        $('rec-btn').classList.remove('recording');
-        $('rec-btn').innerHTML = '&#9679; record a voice note';
-        var blob = new Blob(recChunks, { type: mediaRecorder.mimeType || 'audio/webm' });
-        var reader = new FileReader();
-        reader.onload = function () {
-          state.gnAudio = reader.result;
-          stampGoodnightCycle();
-          try {
-            localStorage.setItem(STORE_KEY, JSON.stringify(state));
-            if (syncLive && state.gnAudio.length < AUDIO_SYNC_LIMIT) {
-              syncSet('gnAudio', state.gnAudio);
-              syncSet('gnCycle', state.gnCycle);
-              $('rec-status').textContent = 'saved \u2605 \u2014 they can play it whenever they need it.';
-            } else if (syncLive) {
-              $('rec-status').textContent = 'saved on this phone \u2605 \u2014 that take was long, so it lives here rather than in the shared sky. A shorter one, under a minute, syncs.';
-            } else {
-              $('rec-status').textContent = 'saved \u2605 \u2014 they can play it whenever they need it.';
-            }
-          } catch (err) {
-            state.gnAudio = null; save();
-            $('rec-status').textContent = 'that take was too long to keep \u2014 try a shorter one, under a minute.';
-          }
-          showAudio();
-        };
-        reader.readAsDataURL(blob);
-      };
-      mediaRecorder.start();
-      $('rec-btn').classList.add('recording');
-      $('rec-btn').innerHTML = '&#9632; stop';
-      $('rec-status').textContent = 'recording\u2026 keep it short and soft.';
-    }).catch(function () {
-      $('rec-status').textContent = 'mic permission said no \u2014 the written goodnight above still works.';
-    });
-  });
-
-  /* ---- wind-down ---- */
-  var windBtn = $('winddown-btn');
-  windBtn.addEventListener('click', function () {
-    var on = document.body.classList.toggle('winddown');
-    windBtn.innerHTML = on ? '&#9728;&#65038; wake the sky' : '&#127769; wind down';
-  });
-  function tickWindHint() {
-    var h = hourIn('America/Indiana/Indianapolis');
-    var late = (h >= 23 || h < 5);
-    windBtn.classList.toggle('late', late);
-    $('winddown-hint').textContent = late ? 'it\u2019s late for her \u2014 goodnight hours' : '';
-  }
-  tickWindHint();
-  setInterval(tickWindHint, 30000);
-
-  /* ---- us today: one short status line each, either phone can set either ---- */
-  function timeAgo(ts) {
-    if (!ts) return '';
-    var s = Math.floor((Date.now() - ts) / 1000);
-    if (s < 45) return 'just now';
-    var m = Math.floor(s / 60);
-    if (m < 60) return m + ' min ago';
-    var h = Math.floor(m / 60);
-    if (h < 24) return h + (h === 1 ? ' hour ago' : ' hours ago');
-    var d = Math.floor(h / 24);
-    return d + (d === 1 ? ' day ago' : ' days ago');
-  }
-  function renderUsSide(key, statusId, updatedId) {
-    var it = state.usboard[key];
-    var st = $(statusId);
-    st.textContent = it.text || 'nothing here yet';
-    st.classList.toggle('empty', !it.text);
-    $(updatedId).textContent = it.ts ? 'updated ' + timeAgo(it.ts) : '';
-  }
-  function renderUs() {
-    renderUsSide('his', 'us-status-his', 'us-updated-his');
-    renderUsSide('hers', 'us-status-hers', 'us-updated-hers');
-  }
-  function saveUs(key, inputId) {
-    var v = $(inputId).value.trim();
-    if (!v) return;
-    state.usboard[key] = { text: v, ts: Date.now() };
-    save();
-    syncSet('usboard/' + key, state.usboard[key]);
-    renderUs();
-    $(inputId).value = '';
-  }
-  $('us-save-his').addEventListener('click', function () { saveUs('his', 'us-input-his'); });
-  $('us-save-hers').addEventListener('click', function () { saveUs('hers', 'us-input-hers'); });
-  $('us-input-his').addEventListener('keydown', function (e) { if (e.key === 'Enter') saveUs('his', 'us-input-his'); });
-  $('us-input-hers').addEventListener('keydown', function (e) { if (e.key === 'Enter') saveUs('hers', 'us-input-hers'); });
-  renderUs();
-
-  /* ---- shared lists (plans / things / moments / bucket): one pattern, four cards.
+  /* ---- shared lists (bucket / movies): one pattern, two cards.
      Items live in local state (so the page works fully offline / local-only) and,
      when a room is live, as children of rooms/<room>/<name>/<id> — set() to write,
      remove() to delete, one on('value') listener per list to re-render. ---- */
-  var usboardPrimed = false;
   var listPrimed = {};
   function syncChild(name, id, value) {
     if (!roomRef) return;
@@ -1735,144 +1353,6 @@
     return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
   }
 
-  /* ---- plans ---- */
-  function planChip(ymd) {
-    var a = new Date(); a.setHours(0, 0, 0, 0);
-    var b = new Date(ymd + 'T00:00:00');
-    var d = isNaN(b.getTime()) ? 0 : Math.round((b - a) / 86400000);
-    if (d === 0) return { text: 'today', past: false };
-    if (d === 1) return { text: 'tomorrow', past: false };
-    if (d > 1) return { text: 'in ' + d + ' days', past: false };
-    if (d === -1) return { text: '1 day ago', past: true };
-    return { text: (-d) + ' days ago', past: true };
-  }
-  function renderPlans() {
-    var list = $('plans-list');
-    list.innerHTML = '';
-    var items = state.plans.slice().sort(function (a, b) {
-      if (a.date !== b.date) return a.date < b.date ? -1 : 1;
-      return (a.ts || 0) - (b.ts || 0);
-    });
-    $('plans-empty').style.display = items.length ? 'none' : 'block';
-    items.forEach(function (it) {
-      var chip = planChip(it.date);
-      var row = document.createElement('div');
-      row.className = 'list-item' + (chip.past ? ' dim' : '');
-      var grow = document.createElement('div');
-      grow.className = 'grow';
-      var t = document.createElement('div');
-      t.className = 'item-title';
-      t.textContent = it.title;
-      var d = document.createElement('div');
-      d.className = 'item-date';
-      d.textContent = fmtDate(it.date);
-      grow.appendChild(t);
-      grow.appendChild(d);
-      if (it.note) {
-        var n = document.createElement('div');
-        n.className = 'item-note';
-        n.textContent = it.note;
-        grow.appendChild(n);
-      }
-      var c = document.createElement('span');
-      c.className = 'chip' + (chip.past ? ' past' : '');
-      c.textContent = chip.text;
-      row.appendChild(grow);
-      row.appendChild(c);
-      row.appendChild(delBtn('Delete plan', function () { deleteItem('plans', 'plans', it.id, renderPlans); }));
-      list.appendChild(row);
-    });
-  }
-  $('plan-add').addEventListener('click', function () {
-    var title = $('plan-title').value.trim();
-    if (!title) return;
-    var item = {
-      id: newItemId('pl'),
-      title: title,
-      date: $('plan-date').value || todayYmd(),
-      note: $('plan-note').value.trim(),
-      ts: Date.now()
-    };
-    $('plan-title').value = '';
-    $('plan-note').value = '';
-    addItem('plans', 'plans', item, renderPlans);
-  });
-  renderPlans();
-
-  /* ---- our things ---- */
-  function renderThings() {
-    var list = $('things-list');
-    list.innerHTML = '';
-    $('things-empty').style.display = state.things.length ? 'none' : 'block';
-    state.things.forEach(function (it) {
-      var row = document.createElement('div');
-      row.className = 'list-item';
-      var grow = document.createElement('div');
-      grow.className = 'grow';
-      var t = document.createElement('div');
-      t.className = 'item-title';
-      t.textContent = it.text;
-      grow.appendChild(t);
-      row.appendChild(grow);
-      row.appendChild(delBtn('Delete thing', function () { deleteItem('things', 'things', it.id, renderThings); }));
-      list.appendChild(row);
-    });
-  }
-  function addThing() {
-    var v = $('thing-input').value.trim();
-    if (!v) return;
-    $('thing-input').value = '';
-    addItem('things', 'things', { id: newItemId('th'), text: v, ts: Date.now() }, renderThings);
-  }
-  $('thing-add').addEventListener('click', addThing);
-  $('thing-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') addThing(); });
-  renderThings();
-
-  /* ---- moments ---- */
-  function renderMoments() {
-    var list = $('moments-list');
-    list.innerHTML = '';
-    var items = state.moments.slice().sort(function (a, b) {
-      if (a.date !== b.date) return a.date < b.date ? 1 : -1;
-      return (b.ts || 0) - (a.ts || 0);
-    });
-    $('moments-empty').style.display = items.length ? 'none' : 'block';
-    items.forEach(function (it) {
-      var head = document.createElement('p');
-      head.className = 'moment-date';
-      head.textContent = fmtDate(it.date);
-      list.appendChild(head);
-      var row = document.createElement('div');
-      row.className = 'list-item';
-      row.style.marginTop = '4px';
-      var grow = document.createElement('div');
-      grow.className = 'grow';
-      var t = document.createElement('div');
-      t.className = 'item-title';
-      t.textContent = it.text;
-      grow.appendChild(t);
-      row.appendChild(grow);
-      row.appendChild(delBtn('Delete moment', function () { deleteItem('moments', 'moments', it.id, renderMoments); }));
-      list.appendChild(row);
-    });
-  }
-  function addMoment() {
-    var v = $('moment-text').value.trim();
-    if (!v) return;
-    var item = {
-      id: newItemId('mo'),
-      text: v,
-      date: $('moment-date').value || todayYmd(),
-      ts: Date.now()
-    };
-    $('moment-text').value = '';
-    $('moment-date').value = todayYmd();
-    addItem('moments', 'moments', item, renderMoments);
-  }
-  $('moment-add').addEventListener('click', addMoment);
-  $('moment-date').value = todayYmd();
-  renderMoments();
-
   /* ---- bucket list ---- */
   function renderBucket() {
     var list = $('bucket-list');
@@ -1921,8 +1401,191 @@
   $('bucket-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') addBucket(); });
   renderBucket();
 
-  // keep countdown chips and "updated … ago" notes fresh across midnight / idle time
-  setInterval(function () { renderPlans(); renderUs(); }, 60000);
+  /* ---- movie list ---- */
+  function renderMovies() {
+    var list = $('movies-list');
+    list.innerHTML = '';
+    $('movies-empty').style.display = state.movies.length ? 'none' : 'block';
+    state.movies.forEach(function (it) {
+      var row = document.createElement('div');
+      row.className = 'list-item';
+      var tick = document.createElement('button');
+      tick.className = 'tick-btn' + (it.watched ? ' done' : '');
+      tick.textContent = it.watched ? '\u2713' : '';
+      tick.setAttribute('aria-label', it.watched ? 'Mark as not watched' : 'Mark as watched');
+      tick.setAttribute('aria-pressed', it.watched ? 'true' : 'false');
+      tick.addEventListener('click', function () {
+        it.watched = !it.watched;
+        it.watchedAt = it.watched ? todayYmd() : '';
+        save();
+        syncChild('movies', it.id, it);
+        renderMovies();
+      });
+      var grow = document.createElement('div');
+      grow.className = 'grow';
+      var t = document.createElement('div');
+      t.className = 'item-title' + (it.watched ? ' done-text' : '');
+      t.textContent = it.title;
+      grow.appendChild(t);
+      if (it.watched && it.watchedAt) {
+        var n = document.createElement('div');
+        n.className = 'item-date';
+        n.textContent = 'watched ' + fmtDate(it.watchedAt);
+        grow.appendChild(n);
+      }
+      row.appendChild(tick);
+      row.appendChild(grow);
+      row.appendChild(delBtn('Delete movie', function () { deleteItem('movies', 'movies', it.id, renderMovies); }));
+      list.appendChild(row);
+    });
+  }
+  function addMovie() {
+    var v = $('movie-input').value.trim();
+    if (!v) return;
+    $('movie-input').value = '';
+    addItem('movies', 'movies', { id: newItemId('mv'), title: v, watched: false, watchedAt: '', ts: Date.now() }, renderMovies);
+  }
+  $('movie-add').addEventListener('click', addMovie);
+  $('movie-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') addMovie(); });
+  renderMovies();
+
+  /* ---- calendar — static yearly events only: birthdays + regional holidays.
+     No sync, no stored state; everything below is computed from this data. ---- */
+  var BIRTHDAYS = { ethan: { m: 4, d: 25 }, adwi: { m: 3, d: 21 } };
+  var HOLIDAYS_FIXED = [
+    // NSW — Sydney, Australia
+    { m: 1, d: 1, name: "New Year's Day", region: 'NSW' },
+    { m: 1, d: 26, name: 'Australia Day', region: 'NSW' },
+    { m: 4, d: 25, name: 'ANZAC Day', region: 'NSW' },
+    { m: 12, d: 25, name: 'Christmas Day', region: 'NSW' },
+    { m: 12, d: 26, name: 'Boxing Day', region: 'NSW' },
+    // Poland — Warsaw
+    { m: 1, d: 1, name: "New Year's Day", region: 'Poland' },
+    { m: 1, d: 6, name: 'Epiphany', region: 'Poland' },
+    { m: 5, d: 1, name: 'Labour Day', region: 'Poland' },
+    { m: 5, d: 3, name: 'Constitution Day', region: 'Poland' },
+    { m: 8, d: 15, name: 'Assumption Day', region: 'Poland' },
+    { m: 11, d: 1, name: "All Saints' Day", region: 'Poland' },
+    { m: 11, d: 11, name: 'Independence Day', region: 'Poland' },
+    { m: 12, d: 25, name: 'Christmas Day', region: 'Poland' },
+    { m: 12, d: 26, name: "St Stephen's Day", region: 'Poland' }
+  ];
+  var MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  var MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+  function easterSunday(year) {
+    // Anonymous Gregorian computus — returns Easter Sunday as a local Date.
+    var a = year % 19, b = Math.floor(year / 100), c = year % 100;
+    var d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
+    var h = (19 * a + b - d - g + 15) % 30;
+    var i = Math.floor(c / 4), k = c % 4;
+    var l = (32 + 2 * e + 2 * i - h - k) % 7;
+    var mm = Math.floor((a + 11 * h + 22 * l) / 451);
+    var month = Math.floor((h + l - 7 * mm + 114) / 31); // 3 = March, 4 = April
+    var day = ((h + l - 7 * mm + 114) % 31) + 1;
+    return new Date(year, month - 1, day);
+  }
+  function addDays(date, n) { var r = new Date(date.getTime()); r.setDate(r.getDate() + n); return r; }
+  function nthWeekday(year, monthIdx, weekday, n) {
+    // n-th weekday of a month; weekday uses JS getDay() numbering (0 = Sun, 1 = Mon).
+    var first = new Date(year, monthIdx, 1);
+    var offset = (weekday - first.getDay() + 7) % 7;
+    return new Date(year, monthIdx, 1 + offset + (n - 1) * 7);
+  }
+  function holidaysForYear(year) {
+    var list = HOLIDAYS_FIXED.map(function (h) { return { m: h.m, d: h.d, name: h.name, region: h.region }; });
+    var easter = easterSunday(year);
+    function pushRule(date, name, region) { list.push({ m: date.getMonth() + 1, d: date.getDate(), name: name, region: region }); }
+    pushRule(addDays(easter, -2), 'Good Friday', 'NSW');
+    pushRule(addDays(easter, 1), 'Easter Monday', 'NSW');
+    pushRule(addDays(easter, 1), 'Easter Monday', 'Poland');
+    pushRule(addDays(easter, 60), 'Corpus Christi', 'Poland');
+    pushRule(nthWeekday(year, 5, 1, 2), "King's Birthday", 'NSW'); // second Monday of June
+    pushRule(nthWeekday(year, 9, 1, 1), 'Labour Day', 'NSW'); // first Monday of October
+    return list;
+  }
+
+  function calEvents(year, monthIdx) {
+    // day-of-month -> { birthdays: [name], holidays: [{ name, region }] }
+    var map = {};
+    function slot(day) { if (!map[day]) map[day] = { birthdays: [], holidays: [] }; return map[day]; }
+    if (BIRTHDAYS.ethan && BIRTHDAYS.ethan.m === monthIdx + 1) slot(BIRTHDAYS.ethan.d).birthdays.push("Ethan's birthday");
+    if (BIRTHDAYS.adwi && BIRTHDAYS.adwi.m === monthIdx + 1) slot(BIRTHDAYS.adwi.d).birthdays.push("Adwi's birthday");
+    holidaysForYear(year).forEach(function (h) {
+      if (h.m === monthIdx + 1) slot(h.d).holidays.push({ name: h.name, region: h.region });
+    });
+    return map;
+  }
+
+  var calCursor = (function () { var now = new Date(); return { y: now.getFullYear(), m: now.getMonth() }; })();
+
+  function renderCalendar() {
+    var y = calCursor.y, m = calCursor.m;
+    $('cal-title').textContent = MONTH_NAMES[m] + ' ' + y;
+    var events = calEvents(y, m);
+    var startOffset = (new Date(y, m, 1).getDay() + 6) % 7; // Monday-first grid
+    var daysInMonth = new Date(y, m + 1, 0).getDate();
+    var daysInPrev = new Date(y, m, 0).getDate();
+    var today = new Date();
+    var cells = [];
+    ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].forEach(function (d) {
+      cells.push('<div class="cal-dow">' + d + '</div>');
+    });
+    var totalCells = Math.ceil((startOffset + daysInMonth) / 7) * 7;
+    for (var i = 0; i < totalCells; i++) {
+      var dayNum, inMonth = true;
+      if (i < startOffset) { dayNum = daysInPrev - startOffset + 1 + i; inMonth = false; }
+      else if (i >= startOffset + daysInMonth) { dayNum = i - startOffset - daysInMonth + 1; inMonth = false; }
+      else { dayNum = i - startOffset + 1; }
+      var cls = 'cal-day' + (inMonth ? '' : ' other');
+      var marks = '';
+      if (inMonth) {
+        if (today.getFullYear() === y && today.getMonth() === m && today.getDate() === dayNum) cls += ' today';
+        var ev = events[dayNum];
+        if (ev) {
+          if (ev.birthdays.length) {
+            marks = '<span class="cal-star">&#9733;</span>';
+          } else if (ev.holidays.length) {
+            var hasNSW = false, hasPL = false;
+            ev.holidays.forEach(function (h) { if (h.region === 'NSW') hasNSW = true; else hasPL = true; });
+            var dots = '';
+            if (hasNSW) dots += '<span class="cal-dot dot-nsw"></span>';
+            if (hasPL) dots += '<span class="cal-dot dot-pl"></span>';
+            marks = '<span class="cal-dots">' + dots + '</span>';
+          }
+        }
+      }
+      cells.push('<div class="' + cls + '">' + dayNum + marks + '</div>');
+    }
+    $('cal-grid').innerHTML = cells.join('');
+
+    var lines = [];
+    Object.keys(events).map(Number).sort(function (a, b) { return a - b; }).forEach(function (day) {
+      var ev = events[day];
+      var label = day + ' ' + MONTH_SHORT[m];
+      ev.birthdays.forEach(function (name) {
+        lines.push('<div class="cal-ev">' + label + ' — ' + name + ' <span class="cal-star-inline">&#9733;</span></div>');
+      });
+      var merged = {};
+      ev.holidays.forEach(function (h) {
+        if (!merged[h.name]) merged[h.name] = [];
+        merged[h.name].push(h.region);
+      });
+      Object.keys(merged).forEach(function (name) {
+        var regs = merged[name].map(function (r) { return '· ' + r; }).join(' ');
+        lines.push('<div class="cal-ev">' + label + ' — ' + name + ' <span class="cal-region">' + regs + '</span></div>');
+      });
+    });
+    $('cal-events').innerHTML = lines.join('');
+    $('cal-empty').style.display = lines.length ? 'none' : 'block';
+  }
+  $('cal-prev').addEventListener('click', function () {
+    calCursor.m--; if (calCursor.m < 0) { calCursor.m = 11; calCursor.y--; } renderCalendar();
+  });
+  $('cal-next').addEventListener('click', function () {
+    calCursor.m++; if (calCursor.m > 11) { calCursor.m = 0; calCursor.y++; } renderCalendar();
+  });
+  renderCalendar();
 
   /* ---- share link ---- */
   $('copy-link').addEventListener('click', function () {
@@ -1938,8 +1601,7 @@
   });
 
   function runDailyResetChecks() {
-    checkGoodnightExpiry();
-    checkVerseExpiry();
+    if (todayKey() !== skyDay) { skyDay = todayKey(); refreshSky(); }
     checkPhotoExpiry();
   }
   runDailyResetChecks();
