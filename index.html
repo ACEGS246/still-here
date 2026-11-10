@@ -432,13 +432,12 @@
 
   <section id="requests-card" class="card">
     <div class="card-label">Requests</div>
-    <div id="requests-list"></div>
-    <p class="empty-note" id="requests-empty">No requests yet — anything you'd love added or changed, ask here.</p>
+    <p class="reset-note" style="margin-top:0">Anything you'd love added or changed — write it here and it seals away. Requests don't show on this page; they're collected each night.</p>
     <div class="add-row">
       <input type="text" id="request-input" placeholder="could we add…" maxlength="200">
-      <button class="pill" id="request-add">ask</button>
+      <button class="pill" id="request-add">seal it</button>
     </div>
-    <p class="reset-note">Requests sit here for both of us until they're done — tick one off when it's sorted.</p>
+    <p class="mini-status" id="request-status"></p>
   </section>
 
   <div id="photo-lightbox" role="dialog" aria-label="Photo viewer">
@@ -599,8 +598,6 @@
   if (!Array.isArray(state.requests)) state.requests = [];
   state.requests = state.requests.filter(function (p) { return p && typeof p.id === 'string' && typeof p.text === 'string'; });
   state.requests.forEach(function (p) {
-    if (typeof p.done !== 'boolean') p.done = false;
-    if (typeof p.doneAt !== 'string') p.doneAt = '';
     if (typeof p.ts !== 'number') p.ts = 0;
   });
   if (!state.photoArchive || typeof state.photoArchive !== 'object' || Array.isArray(state.photoArchive)) state.photoArchive = {};
@@ -892,10 +889,9 @@
       });
       attachList('bucket', 'bucket', renderBucket);
       attachList('movies', 'movies', renderMovies);
-      attachList('requests', 'requests', renderRequests);
       runDailyResetChecks();
       db.ref('.info/connected').on('value', function (snap) {
-        if (snap.val() === true) { setSync('live', 'one sky, two phones — live'); flushPending(); }
+        if (snap.val() === true) { setSync('live', 'one sky, two phones — live'); flushPending(); flushRequests(); }
         else setSync('connecting', 'reconnecting\u2026 stars are kept safe on this phone');
       });
     }).catch(function () {
@@ -1468,53 +1464,33 @@
   $('movie-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') addMovie(); });
   renderMovies();
 
-  /* ---- requests list ---- */
-  function renderRequests() {
-    var list = $('requests-list');
-    list.innerHTML = '';
-    $('requests-empty').style.display = state.requests.length ? 'none' : 'block';
-    state.requests.forEach(function (it) {
-      var row = document.createElement('div');
-      row.className = 'list-item';
-      var tick = document.createElement('button');
-      tick.className = 'tick-btn' + (it.done ? ' done' : '');
-      tick.textContent = it.done ? '\u2713' : '';
-      tick.setAttribute('aria-label', it.done ? 'Mark as not done' : 'Mark as done');
-      tick.setAttribute('aria-pressed', it.done ? 'true' : 'false');
-      tick.addEventListener('click', function () {
-        it.done = !it.done;
-        it.doneAt = it.done ? todayYmd() : '';
-        save();
-        syncChild('requests', it.id, it);
-        renderRequests();
-      });
-      var grow = document.createElement('div');
-      grow.className = 'grow';
-      var t = document.createElement('div');
-      t.className = 'item-title' + (it.done ? ' done-text' : '');
-      t.textContent = it.text;
-      grow.appendChild(t);
-      if (it.done && it.doneAt) {
-        var n = document.createElement('div');
-        n.className = 'item-date';
-        n.textContent = 'done ' + fmtDate(it.doneAt);
-        grow.appendChild(n);
-      }
-      row.appendChild(tick);
-      row.appendChild(grow);
-      row.appendChild(delBtn('Delete request', function () { deleteItem('requests', 'requests', it.id, renderRequests); }));
-      list.appendChild(row);
+  /* ---- requests: sealed outbox. A submitted request is written to the room
+     (rooms/<room>/requests/<id>) and NEVER rendered on the page. state.requests
+     only holds requests not yet delivered (e.g. written while offline); each is
+     removed from local state as soon as its write lands. A nightly pickup reads
+     and clears the room's requests. ---- */
+  function flushRequests() {
+    if (!roomRef || !state.requests.length) return;
+    state.requests.slice().forEach(function (it) {
+      roomRef.child('requests').child(it.id).set(it).then(function () {
+        var i = state.requests.indexOf(it);
+        if (i !== -1) { state.requests.splice(i, 1); save(); }
+      }).catch(function () {});
     });
   }
   function addRequest() {
     var v = $('request-input').value.trim();
     if (!v) return;
     $('request-input').value = '';
-    addItem('requests', 'requests', { id: newItemId('rq'), text: v, done: false, doneAt: '', ts: Date.now() }, renderRequests);
+    state.requests.push({ id: newItemId('rq'), text: v, ts: Date.now() });
+    save();
+    flushRequests();
+    var st = $('request-status');
+    st.textContent = 'sealed — it will be picked up tonight';
+    setTimeout(function () { st.textContent = ''; }, 4000);
   }
   $('request-add').addEventListener('click', addRequest);
   $('request-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') addRequest(); });
-  renderRequests();
 
   /* ---- calendar — static yearly events only: birthdays + regional holidays.
      No sync, no stored state; everything below is computed from this data. ---- */
