@@ -430,6 +430,17 @@
     <p class="reset-note">Tap a photo to see it big. A fresh gallery starts each week — last week's photos stay stored, just tucked away.</p>
   </section>
 
+  <section id="requests-card" class="card">
+    <div class="card-label">Requests</div>
+    <div id="requests-list"></div>
+    <p class="empty-note" id="requests-empty">No requests yet — anything you'd love added or changed, ask here.</p>
+    <div class="add-row">
+      <input type="text" id="request-input" placeholder="could we add…" maxlength="200">
+      <button class="pill" id="request-add">ask</button>
+    </div>
+    <p class="reset-note">Requests sit here for both of us until they're done — tick one off when it's sorted.</p>
+  </section>
+
   <div id="photo-lightbox" role="dialog" aria-label="Photo viewer">
     <img id="lightbox-img" alt="Shared photo, full size">
     <div class="sleep-row">
@@ -513,7 +524,7 @@
     return {
       hearts: 0, stars: [], target: DEFAULT_TARGET, answers: {}, gnText: '', gnAudio: null, gnCycle: '',
       heartColor: 'red', verse: { text: '', ref: '', cycle: '' }, photo: null, photos: [], photoCycle: '',
-      usboard: { his: { text: '', ts: 0 }, hers: { text: '', ts: 0 } }, plans: [], things: [], moments: [], bucket: [], movies: [], photoArchive: {}
+      usboard: { his: { text: '', ts: 0 }, hers: { text: '', ts: 0 } }, plans: [], things: [], moments: [], bucket: [], movies: [], requests: [], photoArchive: {}
     };
   }
   function save() {
@@ -583,6 +594,13 @@
   state.movies.forEach(function (p) {
     if (typeof p.watched !== 'boolean') p.watched = false;
     if (typeof p.watchedAt !== 'string') p.watchedAt = '';
+    if (typeof p.ts !== 'number') p.ts = 0;
+  });
+  if (!Array.isArray(state.requests)) state.requests = [];
+  state.requests = state.requests.filter(function (p) { return p && typeof p.id === 'string' && typeof p.text === 'string'; });
+  state.requests.forEach(function (p) {
+    if (typeof p.done !== 'boolean') p.done = false;
+    if (typeof p.doneAt !== 'string') p.doneAt = '';
     if (typeof p.ts !== 'number') p.ts = 0;
   });
   if (!state.photoArchive || typeof state.photoArchive !== 'object' || Array.isArray(state.photoArchive)) state.photoArchive = {};
@@ -874,6 +892,7 @@
       });
       attachList('bucket', 'bucket', renderBucket);
       attachList('movies', 'movies', renderMovies);
+      attachList('requests', 'requests', renderRequests);
       runDailyResetChecks();
       db.ref('.info/connected').on('value', function (snap) {
         if (snap.val() === true) { setSync('live', 'one sky, two phones — live'); flushPending(); }
@@ -1448,6 +1467,54 @@
   $('movie-add').addEventListener('click', addMovie);
   $('movie-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') addMovie(); });
   renderMovies();
+
+  /* ---- requests list ---- */
+  function renderRequests() {
+    var list = $('requests-list');
+    list.innerHTML = '';
+    $('requests-empty').style.display = state.requests.length ? 'none' : 'block';
+    state.requests.forEach(function (it) {
+      var row = document.createElement('div');
+      row.className = 'list-item';
+      var tick = document.createElement('button');
+      tick.className = 'tick-btn' + (it.done ? ' done' : '');
+      tick.textContent = it.done ? '\u2713' : '';
+      tick.setAttribute('aria-label', it.done ? 'Mark as not done' : 'Mark as done');
+      tick.setAttribute('aria-pressed', it.done ? 'true' : 'false');
+      tick.addEventListener('click', function () {
+        it.done = !it.done;
+        it.doneAt = it.done ? todayYmd() : '';
+        save();
+        syncChild('requests', it.id, it);
+        renderRequests();
+      });
+      var grow = document.createElement('div');
+      grow.className = 'grow';
+      var t = document.createElement('div');
+      t.className = 'item-title' + (it.done ? ' done-text' : '');
+      t.textContent = it.text;
+      grow.appendChild(t);
+      if (it.done && it.doneAt) {
+        var n = document.createElement('div');
+        n.className = 'item-date';
+        n.textContent = 'done ' + fmtDate(it.doneAt);
+        grow.appendChild(n);
+      }
+      row.appendChild(tick);
+      row.appendChild(grow);
+      row.appendChild(delBtn('Delete request', function () { deleteItem('requests', 'requests', it.id, renderRequests); }));
+      list.appendChild(row);
+    });
+  }
+  function addRequest() {
+    var v = $('request-input').value.trim();
+    if (!v) return;
+    $('request-input').value = '';
+    addItem('requests', 'requests', { id: newItemId('rq'), text: v, done: false, doneAt: '', ts: Date.now() }, renderRequests);
+  }
+  $('request-add').addEventListener('click', addRequest);
+  $('request-input').addEventListener('keydown', function (e) { if (e.key === 'Enter') addRequest(); });
+  renderRequests();
 
   /* ---- calendar — static yearly events only: birthdays + regional holidays.
      No sync, no stored state; everything below is computed from this data. ---- */
